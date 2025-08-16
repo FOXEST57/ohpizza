@@ -1,0 +1,124 @@
+.title {
+  color: white;
+  font-size: 4rem;
+  margin-left: 1em;
+  text-align: center;
+}
+.methodep {
+  text-align: center;
+  font-size: 2em;
+  margin-top: 5px;
+}
+.methodea {
+  text-decoration: none;
+}
+
+.clipart {
+  margin-bottom: 10%;
+}
+
+.clipart,
+.phone {
+  margin-top: 4%;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.clipart img {
+  height: 25vh;
+  padding-bottom: 4%;
+}
+
+.info p {
+  max-width: 400px;
+  text-align: justify;
+  margin-bottom: 50px;
+}
+
+.bienvenue {
+  /* text-align: center; */
+  margin-bottom: 4%;
+}
+
+.bienvenue h2 {
+  color: rgb(225, 255, 0);
+  font-size: 2em;
+  padding-bottom: 1%;
+}
+.bienvenue img {
+  max-width: 20vh;
+  border-radius: 10px;
+  /* object-fit: contain; */
+}
+.bienvenue p {
+  font-size: 1.5em;
+  padding-bottom: 4%;
+}
+
+.carteBienvenue {
+  max-width: 50%;
+  margin-left: 10%;
+  margin-right: 40%;
+  margin-bottom: 5%;
+}
+.carteBienvenueGauche {
+  max-width: 50%;
+  margin-left: 40%;
+  margin-right: 10%;
+  margin-bottom: 5%;
+}
+.carteBienvenue p {
+  padding-left: 10px;
+  font-size: 1.2 em;
+  text-align: justify;
+}
+
+.alignLeft {
+  float: left;
+  margin-right: 20px;
+}
+
+.alignright {
+  float: right;
+  margin-right: 20px;
+}
+
+.tel {
+  font-weight: bold;
+  padding-top: 0px;
+  font-size: 3em;
+  margin-left: 1em;
+  color: #ff4000;
+}
+
+.phone {
+  width: 100%;
+  margin: 0px 0px 0px 0px;
+  display: flex;
+  justify-content: space-around;
+  position: sticky;
+  top: 150px;
+}
+.phone div {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  animation: phone 2s ease 0s 1 normal forwards;
+}
+
+.phone img {
+  height: 2em;
+}
+
+@keyframes phone {
+  0% {
+    transform: scale(0);
+    transform-origin: 0% 50%;
+  }
+
+  100% {
+    transform: scale(1);
+    transform-origin: 0% 50%;
+  }
+}

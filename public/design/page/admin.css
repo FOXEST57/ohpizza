@@ -1,0 +1,37 @@
+h1 {
+  color: red;
+}
+
+section {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.contenair {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: bisque;
+  height: 200px;
+  width: 200px;
+  border: 2px solid rgb(20, 91, 100);
+  margin: 30px;
+}
+
+.ingredient {
+  width: 500px;
+}
+
+input {
+  margin-right: 20px;
+  margin-bottom: 5px;
+}
+
+.boutonModif {
+  margin-right: 20px;
+}
+
+.boutonSup {
+  margin-right: 20px;
+}

@@ -1,0 +1,58 @@
+footer {
+  background-color: rgb(20, 18, 18);
+}
+
+.info {
+  padding: 25px 0px 35px 0px;
+  display: flex;
+  justify-content: space-around;
+}
+h3 {
+  text-align: center;
+  margin-bottom: 10%;
+}
+table {
+  border-spacing: 10px 10px;
+}
+.livraison img {
+  max-height: 100px;
+}
+.camion {
+  text-align: center;
+}
+.cbimg {
+  text-align: center;
+}
+.cb img {
+  max-height: 130px;
+}
+
+.contact {
+  font-size: 1.4em;
+  background-color: black;
+  padding: 25px 0px 25px 0px;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-around;
+}
+.contact img {
+  height: 1em;
+  margin-right: 10px;
+}
+.contact div {
+  display: flex;
+  align-items: center;
+}
+
+.mention {
+  font-size: 0.6em;
+  background-color: black;
+  padding: 25px 0px 25px 0px;
+  padding-top: 1.2em;
+  display: flex;
+  justify-content: space-around;
+}
+.mention a {
+  text-decoration: none;
+  font-size: 1.4em;
+}

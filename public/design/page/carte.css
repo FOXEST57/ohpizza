@@ -1,0 +1,35 @@
+.prix {
+  text-align: right;
+  font-size: 20px;
+}
+
+.carte {
+  text-align: center;
+}
+
+.boutonPerso {
+  color: black;
+}
+
+.tab {
+  display: flex;
+  justify-content: center;
+}
+
+.panier {
+  height: 20px;
+}
+
+.nomPizza {
+  text-align: left;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.nomIngredients {
+  text-align: left;
+  width: 700px;
+  padding-bottom: 20px;
+  flex-wrap: wrap;
+}

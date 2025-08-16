@@ -1,0 +1,1816 @@
+/* Force reload - Cache bust: 2025-01-17-17:23:47 */
+.admin {
+  min-height: 100vh;
+  padding: 180px 0 40px 0;
+  background: url('/images/fond.jpg') center/cover;
+  position: relative;
+}
+
+.admin::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+  position: relative;
+  z-index: 2;
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.admin-header h1 {
+  color: #e74c3c;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.admin-header p {
+  color: #ffffff;
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.admin-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.admin-card-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+}
+
+.admin-card h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.admin-card p {
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.admin-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  color: #2c3e50;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.section-header h2 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.add-form {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.add-form h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
+.form-group {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+  margin-bottom: 25px;
+  padding: 20px 15px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 15px;
+  border: 1px solid #e9ecef;
+}
+
+/* Responsive pour les écrans plus petits */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-input {
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  color: #2c3e50;
+  background-color: white;
+  width: 100%;
+  min-width: 200px;
+}
+
+/* Styles spécifiques pour les selects dans la section d'ajout de pizza */
+.form-input select,
+select.form-input {
+  min-width: 250px;
+  padding: 12px 15px;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #e74c3c;
+}
+
+/* Styles pour les formulaires d'édition et d'ajout */
+.admin-page input[type="text"],
+.admin-page input[type="number"],
+.admin-page select,
+.admin-page textarea {
+  color: #2c3e50 !important;
+  background-color: white !important;
+}
+
+/* Labels et textes des formulaires */
+.admin-page label {
+  color: #2c3e50 !important;
+  font-weight: 500;
+}
+
+/* Formulaires d'édition spécifiques */
+.edit-form input,
+.edit-form select,
+.edit-form textarea {
+  color: #2c3e50 !important;
+  background-color: white !important;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 15px;
+  font-size: 1rem;
+}
+
+/* Styles pour les colonnes du tableau des pizzas */
+.ingredients-text,
+.price-text,
+.category-text,
+.base-text {
+  color: #2c3e50 !important;
+  font-weight: 500;
+}
+
+.price-text {
+  font-weight: 600;
+  color: #27ae60 !important;
+}
+
+.edit-form label {
+  color: #2c3e50 !important;
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Styles pour les options du select */
+.admin-page select option {
+  color: #2c3e50 !important;
+  background-color: white !important;
+  padding: 8px;
+}
+
+/* Styles spécifiques pour tous les selects */
+.admin-page select {
+  color: #2c3e50 !important;
+  background-color: white !important;
+}
+
+/* Correction pour les options dans tous les contextes */
+.form-input option,
+
+/* Styles pour la grille de gestion des pizzas */
+.pizza-management-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* Style pour la carte d'ajout de pizza en pleine largeur */
+.add-pizza-full-width {
+  grid-column: 1 / -1;
+  max-width: none;
+}
+
+/* Style pour la carte de gestion de pizza en pleine largeur */
+.manage-pizza-full-width {
+  grid-column: 1 / -1;
+  max-width: none;
+}
+
+@media (max-width: 1024px) {
+  .pizza-management-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* Carte principale de gestion des pizzas */
+.pizza-card {
+  background: #ffffff;
+  border: 2px solid #e3e6ea;
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pizza-card:hover {
+  border-color: #e74c3c;
+  box-shadow: 0 12px 32px rgba(231, 76, 60, 0.15);
+  transform: translateY(-2px);
+}
+
+.manage-pizza-card {
+  margin-bottom: 30px;
+}
+
+.manage-pizza-full-width {
+  width: 100%;
+}
+
+/* En-tête des cartes */
+.card-header {
+  background: linear-gradient(45deg, #e74c3c, #ff8e8e);
+  color: white;
+  padding: 25px;
+  text-align: center;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.card-header h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.card-header p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+/* Contenu des cartes */
+.card-content {
+  padding: 25px;
+}
+
+/* Carte d'ajout spécifique */
+.add-pizza-card .card-header {
+  background: linear-gradient(135deg, #28a745, #34ce57);
+}
+
+/* Carte de gestion spécifique */
+.manage-pizza-card .card-header {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+}
+
+/* Section de modification */
+.edit-form-section {
+  background: #fff3cd;
+  border: 2px solid #ffeaa7;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.edit-form-section h4 {
+  color: #856404;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+/* Section liste des pizzas */
+.pizza-list-section {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.list-header {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.list-header h4 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+/* === CARTES PIZZAS ADMIN - CSS COMPLET ET PROPRE === */
+
+/* Grille des cartes */
+.pizza-admin-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 24px 0;
+  margin-top: 20px;
+}
+
+/* Styles pizza-admin supprimés pour éviter les conflits - définis dans Admin.css */
+
+/* En-tête */
+.pizza-admin-header {
+  padding: 28px 28px 20px 28px;
+  border-bottom: 2px solid #f8f9fa;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.pizza-admin-title {
+  color: #2c3e50 !important;
+  margin: 0 0 16px 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+
+.pizza-admin-ingredients {
+  color: #495057 !important;
+  font-size: 1.05rem;
+  margin: 0;
+  line-height: 1.7;
+  font-style: italic;
+  text-align: center;
+  width: 100%;
+  font-weight: 500;
+}
+
+.pizza-admin-price {
+  color: #e74c3c !important;
+  font-size: 1.3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid #e74c3c;
+  display: inline-block;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.pizza-admin-card {
+  background: white;
+  border: 3px solid #e74c3c;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.2);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.pizza-admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(231, 76, 60, 0.3);
+  border-color: #c0392b;
+}
+
+.pizza-admin-image {
+  width: 120px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-page .pizza-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.pizza-admin-price-section {
+  text-align: center;
+  padding: 0 15px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.pizza-admin-header {
+  flex: 1;
+  min-width: 150px;
+}
+
+.pizza-admin-body {
+  flex: 2;
+  min-width: 200px;
+}
+
+.pizza-admin-footer {
+  flex-shrink: 0;
+  min-width: 200px;
+}
+
+/* Styles responsives supprimés pour éviter les conflits - définis dans Admin.css */
+
+/* États vides et de chargement */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.empty-state p:first-child {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.empty-state p:last-child {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+/* Bouton pleine largeur */
+.btn-full {
+  width: 100%;
+  margin-top: 15px;
+}
+
+/* Amélioration des actions de formulaire */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.form-actions .btn {
+  min-width: 120px;
+}
+.admin-page .edit-form select option,
+.admin-page select option {
+  color: #2c3e50 !important;
+  background-color: white !important;
+  font-size: 1rem;
+}
+
+.items-list {
+  margin-top: 30px;
+}
+
+.items-list h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-container p {
+  color: #2c3e50;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.admin-page .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Classe spécifique pour les boutons de découverte dans la page admin */
+.btn-admin-discover {
+  background: #e74c3c !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 25px !important;
+  text-decoration: none !important;
+  font-weight: bold !important;
+  font-size: 1.1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 200px !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+}
+
+/* Classe spécifique pour centrer les boutons du dashboard principal */
+.admin-dashboard-button {
+  margin: 0 auto !important;
+  align-self: center !important;
+}
+
+.btn-admin-discover:hover {
+  background: linear-gradient(45deg, #e74c3c, #ff8e8e) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4) !important;
+  color: white !important;
+}
+
+.admin-page .btn-secondary {
+  background: #6c757d;
+  color: white;
+  border: 2px solid #6c757d;
+}
+
+.admin-page .btn-secondary:hover {
+  background: #5a6268;
+  border-color: #545b62;
+}
+
+.admin-page .btn-danger {
+  background: #dc3545;
+  color: white;
+  border: 2px solid #dc3545;
+}
+
+.admin-page .btn-danger:hover {
+  background: #c82333;
+  border-color: #bd2130;
+}
+
+.btn-small {
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  min-width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.admin-table th {
+  background: #e74c3c;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* Alignement spécifique pour la colonne Actions */
+.admin-table th:last-child {
+  text-align: left;
+}
+
+.admin-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  color: #2c3e50;
+}
+
+/* Style spécifique pour les jours dans le tableau des horaires */
+.admin-table td strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.admin-table tr:hover {
+  background: #f8f9fa;
+}
+
+.admin-page .btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* Styles pour les groupes de boutons */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.btn-group .btn {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Alignement de l'en-tête Actions à droite */
+.admin-table th:last-child {
+  text-align: right;
+}
+
+.admin-table td:last-child {
+  text-align: right;
+}
+
+/* Alignement spécifique pour la section horaires */
+.admin-table tbody tr td:last-child {
+  text-align: right;
+  padding-right: 20px;
+}
+
+/* Styles modernes pour les boutons d'édition et suppression */
+.btn-icon-edit {
+  background: linear-gradient(135deg, #4CAF50, #45a049) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 42px !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-size: 16px !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.btn-icon-edit:hover {
+  background: linear-gradient(135deg, #45a049, #3d8b40) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4) !important;
+}
+
+.btn-icon-edit:active {
+  transform: translateY(-1px) scale(0.98) !important;
+  transition: all 0.1s ease !important;
+}
+
+.btn-icon-delete {
+  background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 42px !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-size: 16px !important;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.25) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.btn-icon-delete:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4) !important;
+}
+
+.btn-icon-delete:active {
+  transform: translateY(-1px) scale(0.98) !important;
+  transition: all 0.1s ease !important;
+}
+
+/* Conteneur pour les boutons d'actions */
+.btn-actions-container {
+  display: flex !important;
+  gap: 15px !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+}
+
+/* Styles pour les anciens boutons (compatibilité) */
+.btn-icon-neutral {
+  background: linear-gradient(135deg, #6c757d, #5a6268) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 42px !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-size: 16px !important;
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.25) !important;
+}
+
+.btn-icon-neutral:hover {
+  background: linear-gradient(135deg, #5a6268, #495057) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4) !important;
+}
+
+/* Deuxième définition de .btn-primary remplacée par .btn-discover-menu */
+
+.admin-page .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: 2px solid #6c757d;
+}
+
+.admin-page .btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+  transform: translateY(-2px);
+}
+
+.admin-page .btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: 2px solid #dc3545;
+}
+
+.admin-page .btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+  transform: translateY(-2px);
+}
+
+.admin-page .btn-success {
+  background-color: #28a745;
+  color: white;
+  border: 2px solid #28a745;
+}
+
+.admin-page .btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+  transform: translateY(-2px);
+}
+
+/* Styles pour la gestion des commentaires */
+.reviews-moderation {
+  margin-top: 20px;
+}
+
+.reviews-moderation h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 2px dashed #dee2e6;
+}
+
+.no-reviews p {
+  color: #28a745;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.review-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.review-header h4 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.review-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.review-rating .star {
+  font-size: 16px;
+  opacity: 0.3;
+}
+
+.review-rating .star.filled {
+  opacity: 1;
+}
+
+.review-content {
+  margin-bottom: 15px;
+}
+
+.review-content p {
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}
+
+.review-meta {
+  margin-bottom: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.review-meta small {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.review-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.review-actions .btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.review-actions .btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.review-actions .btn-success:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.review-actions .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.review-actions .btn-danger:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Responsive pour les cartes d'avis */
+@media (max-width: 768px) {
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .review-actions {
+    justify-content: center;
+  }
+}
+
+.btn-small {
+  padding: 8px 15px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .admin {
+    padding: 20px 0;
+  }
+  
+  .admin-header h1 {
+    font-size: 2rem;
+  }
+  
+  .admin-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .admin-card {
+    padding: 20px;
+  }
+  
+  .admin-section {
+    padding: 20px;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .form-group {
+    flex-direction: column;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-table {
+    font-size: 0.9rem;
+  }
+  
+  .admin-table th,
+  .admin-table td {
+    padding: 10px 8px;
+  }
+}
+
+/* Styles pour la page d'ajout de pizza sans modal */
+.admin-add-pizza-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.add-pizza-header {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 40px 30px;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+}
+
+.back-button {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: white !important;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  transform: translateX(-3px) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.page-title {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.page-title h1 {
+  font-size: 2.8rem;
+  margin: 0 0 15px 0;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.page-title p {
+  font-size: 1.3rem;
+  margin: 0;
+  opacity: 0.95;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+}
+
+.add-pizza-container {
+  padding: 50px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.add-pizza-form {
+  background: white;
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(40, 167, 69, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.add-pizza-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+}
+
+.form-section {
+  margin-bottom: 45px;
+  padding-bottom: 35px;
+  border-bottom: 2px solid #f1f3f4;
+  position: relative;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 35px;
+}
+
+.form-section h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin: 0 0 30px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #e9ecef;
+}
+
+.form-section h3:before {
+  content: "📝";
+  font-size: 1.4rem;
+  padding: 8px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.form-section:nth-child(2) h3:before {
+  content: "🧄";
+  background: linear-gradient(135deg, #fd7e14, #ffc107);
+}
+
+.form-group {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.form-group .form-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 1.05rem;
+  position: relative;
+  padding-left: 8px;
+}
+
+.form-group .form-label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border-radius: 2px;
+}
+
+.form-group .form-input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.form-group .form-input:focus {
+  border-color: #28a745;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-group .form-input:hover {
+  border-color: #20c997;
+  background: white;
+}
+
+.form-actions-section {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  padding-top: 40px;
+  border-top: 3px solid #f1f3f4;
+  margin-top: 20px;
+}
+
+.btn-large {
+  padding: 18px 45px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-radius: 30px;
+  min-width: 220px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-large.btn-admin-discover {
+  background: #e74c3c !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3) !important;
+  padding: 18px 45px !important;
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  border-radius: 30px !important;
+  min-width: 220px !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-large.btn-admin-discover:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4) !important;
+  background: linear-gradient(45deg, #e74c3c, #ff8e8e) !important;
+}
+
+.btn-large.btn-secondary {
+  background: #6c757d;
+  border: 2px solid #6c757d;
+  color: white;
+}
+
+.btn-large.btn-secondary:hover {
+  background: #5a6268;
+  border-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .add-pizza-header {
+    padding: 30px 20px;
+  }
+  
+  .back-button {
+    position: static;
+    margin-bottom: 25px;
+    display: block;
+    width: fit-content;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .page-title h1 {
+    font-size: 2.2rem;
+  }
+  
+  .page-title p {
+    font-size: 1.1rem;
+  }
+  
+  .add-pizza-container {
+    padding: 30px 20px;
+  }
+  
+  .add-pizza-form {
+    padding: 30px 25px;
+    border-radius: 15px;
+  }
+  
+  .form-section h3 {
+    font-size: 1.3rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 15px;
+  }
+  
+  .form-actions-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .btn-large {
+    width: 100%;
+    margin-bottom: 0;
+    min-width: auto;
+    padding: 16px 30px;
+    font-size: 1.1rem;
+  }
+  
+  .ingredients-section {
+    padding: 20px;
+  }
+  
+  .ingredients-grid {
+    grid-template-columns: 1fr;
+    max-height: 200px;
+    padding: 15px;
+  }
+}
+
+/* Styles pour la section des ingrédients avec checkboxes */
+.ingredients-section {
+  margin-top: 20px;
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  border: 2px solid #e9ecef;
+}
+
+.form-label {
+  color: #2c3e50 !important;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: block;
+  font-size: 1.1rem;
+}
+
+.ingredients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  padding: 20px;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #2c3e50 !important;
+  font-weight: 500 !important;
+  border: 2px solid transparent;
+  background: #f8f9fa;
+}
+
+.checkbox-label:hover {
+  background: white;
+  border-color: #28a745;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.15);
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  accent-color: #28a745;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.checkbox-input:checked + .checkbox-text {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.checkbox-text {
+  color: #2c3e50;
+  font-size: 0.95rem;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .ingredients-grid {
+    grid-template-columns: 1fr;
+    max-height: 150px;
+  }
+  
+  .checkbox-label {
+    padding: 6px 10px;
+  }
+}
+
+/* Styles pour les avis Google */
+.form-textarea {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 120px;
+  color: #2c3e50;
+  background-color: white;
+  transition: border-color 0.3s ease;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #ff6b6b;
+}
+
+.form-help {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.form-help code {
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #e83e8c;
+  font-size: 0.85rem;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.review-card {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reviewer-photo {
+  border: 2px solid #e9ecef;
+  object-fit: cover;
+}
+
+.reviewer-stats {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 2px;
+}
+
+.review-source {
+  flex-shrink: 0;
+}
+
+.source-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+}
+
+.source-badge.google {
+  background: linear-gradient(135deg, #4285f4, #34a853);
+}
+
+.review-rating {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating-number {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.review-comment {
+  margin-bottom: 15px;
+}
+
+.review-comment p {
+  color: #2c3e50;
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+.review-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid #e9ecef;
+  padding-top: 15px;
+  margin-top: 15px;
+}
+
+.review-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.review-dates small {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.review-actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .review-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .review-footer {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .reviewer-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* Classes spécifiques pour la section des horaires */
+.horaires-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.horaires-table .horaires-th {
+  background: #e74c3c;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* Alignement spécifique pour la colonne Actions dans les horaires */
+.horaires-table .horaires-th-actions {
+  background: #e74c3c;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.horaires-table .horaires-td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  color: #2c3e50;
+}
+
+/* Style spécifique pour les jours dans le tableau des horaires */
+.horaires-table .horaires-td strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.horaires-table tr:hover {
+  background: #f8f9fa;
+}
+
+/* Alignement à droite pour la colonne Actions des horaires */
+.horaires-table .horaires-td-actions {
+  text-align: right;
+  padding: 12px 20px 12px 15px;
+  border-bottom: 1px solid #eee;
+  color: #2c3e50;
+}
+
+/* Classes spécifiques pour la section des bases */
+.bases-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.bases-table .bases-th {
+  background: #e74c3c;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* Alignement spécifique pour la colonne Actions dans les bases */
+.bases-table .bases-th-actions {
+  background: #e74c3c;
+  color: white;
+  padding: 15px 45px 15px 15px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.bases-table .bases-td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  color: #2c3e50;
+}
+
+/* Style spécifique pour les éléments dans le tableau des bases */
+.bases-table .bases-td strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.bases-table tr:hover {
+  background: #f8f9fa;
+}
+
+/* Alignement à droite pour la colonne Actions des bases */
+.bases-table .bases-td-actions {
+  text-align: right;
+  padding: 12px 20px 12px 15px;
+  border-bottom: 1px solid #eee;
+  color: #2c3e50;
+}
+
+/* Conteneur pour aligner les boutons d'actions sur la même ligne */
+.bases-actions-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Styles spécifiques pour la table des ingrédients */
+.admin-table th:nth-child(3) {
+  padding-right: 45px;
+}
+
+/* Classes spécifiques pour les boutons de la section horaires */
+.btn-horaire-edit {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Classes spécifiques pour les boutons icônes de la section bases */
+.btn-base-edit {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.btn-base-edit:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.btn-base-delete {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.btn-base-delete:hover {
+  background: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+.btn-horaire-edit:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.btn-horaire-save {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.btn-horaire-save:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.btn-horaire-cancel {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+}
+
+.btn-horaire-cancel:hover {
+  background: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}

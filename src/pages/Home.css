@@ -1,0 +1,835 @@
+/* Styles pour la page d'accueil - Force refresh */
+* {
+  font-family: 'Arial', Helvetica, sans-serif;
+  color: white;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+.home {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  padding: 0;
+  margin: 0;
+}
+
+/* Section Hero */
+.hero-section {
+  min-height: 100vh;
+  background-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(35, 35, 38, 0.6)
+  ),
+  url("/images/pizzeria_75.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-content {
+  text-align: center;
+  max-width: 800px;
+  padding: 0 20px;
+  animation: fadeInUp 1s ease-out;
+}
+
+.phone-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  animation: fadeIn 1.5s ease-out;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: bold;
+  margin: 40px 0 35px 0;
+  color: white;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+  animation: slideInDown 1s ease-out;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 60px;
+  color: #f0f0f0;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  animation: fadeIn 2s ease-out;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 2.5s ease-out;
+}
+
+.btn-primary, .btn-secondary {
+  text-decoration: none;
+  font-size: 1.1rem;
+  display: inline-block;
+  text-align: center;
+  min-width: 200px;
+}
+
+.btn-secondary {
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #e74c3c;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #e74c3c, #ff8e8e);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+/* Classe spécifique pour le bouton Découvrir notre menu - MÉTHODE RADICALE */
+.btn-discover-menu {
+  background: #e74c3c !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 25px !important;
+  text-decoration: none !important;
+  font-weight: bold !important;
+  font-size: 1.1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 200px !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+}
+
+.btn-discover-menu:hover {
+  background: linear-gradient(45deg, #e74c3c, #ff8e8e) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4) !important;
+  color: white !important;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-secondary:hover {
+  background: white;
+  color: #333;
+  transform: translateY(-3px);
+}
+
+/* Container général */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.tel {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+}
+
+.tel-clickable {
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.tel-clickable:hover {
+  color: #e74c3c;
+  text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+  transform: scale(1.05);
+}
+
+/* Sections générales */
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  color: #e74c3c;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Section Pizzas Populaires */
+.pizzas-populaires {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
+}
+
+.pizzas-grid {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+/* Assurer que les cartes gardent une largeur cohérente */
+.pizzas-grid .pizza-card-new {
+  flex: 0 1 300px;
+  max-width: 350px;
+}
+
+/* Nouveaux styles pour les cartes de pizza */
+.pizza-card-new {
+  background: #1a1a1a;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pizza-card-new:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(231, 76, 60, 0.3);
+  border-color: #e74c3c;
+}
+
+.pizza-image-new {
+  height: 200px;
+  overflow: hidden;
+}
+
+.pizza-image-new img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.pizza-card-new:hover .pizza-image-new img {
+  transform: scale(1.05);
+}
+
+.pizza-info-new {
+  padding: 20px;
+  background: transparent;
+}
+
+.pizza-info-new h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.pizza-description-new {
+  font-size: 0.9rem;
+  color: #ffffff;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.pizza-price-new {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #e74c3c;
+  margin-bottom: 15px;
+}
+
+.pizza-btn-new {
+  background: #e74c3c;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+.pizza-btn-new:hover {
+  background: linear-gradient(45deg, #e74c3c, #ff8e8e);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+/* Section Avis */
+.avis-section {
+  padding: 80px 0;
+  background: #1a1a1a;
+}
+
+.note-moyenne {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.stars svg.text-yellow-400 {
+  color: #fbbf24 !important;
+  fill: #fbbf24 !important;
+  stroke: #fbbf24 !important;
+}
+
+.stars svg.text-gray-300 {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+}
+
+.note-text {
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+.avis-carrousel-container {
+  margin: 40px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.avis-carrousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.avis-carrousel-track {
+  display: flex;
+  width: 400%; /* Largeur quadruple pour plus de fluidité */
+  animation: scroll-infinite 40s linear infinite;
+}
+
+@keyframes scroll-infinite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-25%); /* Se déplace d'un quart pour revenir au début sans saut */
+  }
+}
+
+.avis-carrousel-card {
+  flex: 0 0 calc(100% / 12); /* 12 cartes au total (3 originales × 4 répétitions) visibles 3 à la fois */
+  background: rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  margin: 0 15px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.avis-carrousel-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Responsive pour tablettes */
+@media (max-width: 768px) {
+  .avis-carrousel-card {
+    flex: 0 0 calc(100% / 8); /* 8 cartes au total, 2 visibles sur tablette */
+    margin: 0 10px;
+    padding: 25px;
+  }
+}
+
+/* Responsive pour mobiles */
+@media (max-width: 480px) {
+  .avis-carrousel-card {
+    flex: 0 0 calc(100% / 4); /* 4 cartes au total, 1 visible sur mobile */
+    margin: 0 5px;
+    padding: 20px;
+  }
+}
+
+.avis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.avis-nom {
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.avis-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.avis-stars svg.text-yellow-400 {
+  color: #fbbf24 !important;
+  fill: #fbbf24 !important;
+  stroke: #fbbf24 !important;
+}
+
+.avis-stars svg.text-gray-300 {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+}
+
+.avis-commentaire {
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.avis-source {
+  font-size: 0.8rem;
+  color: #4285f4;
+  background: rgba(66, 133, 244, 0.1);
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+
+.voir-plus-avis {
+  display: block;
+  text-align: center;
+  color: #e74c3c;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 15px;
+  border: 2px solid #e74c3c;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.voir-plus-avis:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+/* Section Horaires */
+.horaires-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+}
+
+.horaires-grid {
+  display: flex;
+  gap: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.horaires-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1;
+}
+
+.horaire-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 350px;
+  transition: all 0.3s ease;
+}
+
+.horaire-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Responsive pour les horaires */
+@media (max-width: 768px) {
+  .horaires-grid {
+    flex-direction: column;
+    gap: 20px;
+    max-width: 100%;
+  }
+  
+  .horaires-column {
+    gap: 15px;
+  }
+  
+  .horaire-item {
+    min-width: auto;
+    padding: 15px 20px;
+  }
+}
+
+.jour {
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.heures {
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: flex-start;
+}
+
+.horaire-periode {
+  white-space: nowrap;
+}
+
+.horaire-separator {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Section Contact */
+.contact-section {
+  padding: 80px 0;
+  background: #1a1a1a;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.contact-item svg {
+  color: #e74c3c;
+  margin-top: 5px;
+}
+
+.contact-item h3 {
+  color: #e74c3c;
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+}
+
+.contact-item p {
+  color: #ccc;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.clipart {
+  display: flex;
+  justify-content: center;
+  gap: 200px;
+  margin: 60px 0;
+  flex-wrap: wrap;
+}
+
+.methode {
+  text-align: center;
+}
+
+.methodea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.methodea:hover {
+  transform: scale(1.1);
+}
+
+.methodea img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.methodep {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.bienvenue {
+  max-width: 1200px;
+  margin: 80px auto 0 auto;
+  padding: 0 20px;
+  background-color: #1a1a1a;
+}
+
+.carteBienvenue, .carteBienvenueGauche {
+  display: flex;
+  align-items: center;
+  margin: 60px 0;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+}
+
+.carteBienvenue {
+  flex-direction: row;
+}
+
+.carteBienvenueGauche {
+  flex-direction: row-reverse;
+}
+
+.carte-content {
+  flex: 1;
+}
+
+.carte-content h2 {
+  margin-bottom: 15px;
+}
+
+.carte-content p {
+  margin: 0;
+}
+
+.alignLeft, .alignright {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 0 30px;
+}
+
+.carteBienvenue h2, .carteBienvenueGauche h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #e74c3c;
+}
+
+.carteBienvenue p, .carteBienvenueGauche p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: white;
+  margin: 0;
+}
+
+.bienvenue > p {
+  text-align: center;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #e74c3c;
+  margin-top: 60px;
+  padding: 0 40px 40px 40px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Section Pizzas Populaires - Responsive */
+
+.pizzas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Anciens styles supprimés - remplacés par les nouveaux styles pizza-card-new */
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-primary, .btn-secondary {
+    min-width: 250px;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .clipart {
+    gap: 30px;
+  }
+  
+  .methodea img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .methodep {
+    font-size: 1.1rem;
+  }
+  
+  .pizzas-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .avis-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .horaires-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .carteBienvenue, .carteBienvenueGauche {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .alignLeft, .alignright {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 0 20px 0;
+  }
+  
+  .pizzas-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .container {
+    padding: 0 15px;
+  }
+  
+  .pizzas-populaires,
+  .avis-section,
+  .horaires-section,
+  .contact-section {
+    padding: 60px 0;
+  }
+  
+  .pizza-info {
+    padding: 20px;
+  }
+  
+  .avis-card {
+    padding: 20px;
+  }
+  
+  .contact-item {
+    padding: 20px;
+  }
+  
+
+  
+  .pizzas-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .pizza-info {
+    padding: 15px;
+  }
+  
+  .pizza-info h3 {
+    font-size: 1.1rem;
+  }
+  
+  .pizza-description {
+    font-size: 0.85rem;
+  }
+}

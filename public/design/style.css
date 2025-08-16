@@ -1,0 +1,23 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    box-sizing: border-box;
+    word-wrap: break-word;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    padding-top: 20%;
+}
+
+.back {
+    background-image: linear-gradient(
+            to top,
+            rgb(2, 2, 2),
+            rgba(35, 35, 38, 0.559)
+        ),
+        url("/images/pizzeria_75.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+}
