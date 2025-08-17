@@ -34,6 +34,7 @@ export interface CartItem {
   quantity: number;        // Quantité commandée
   ingredients?: string;    // Ingrédients supplémentaires (optionnel avec ?)
   base?: string;          // Type de base (optionnel avec ?)
+  image_url?: string;     // URL de l'image (optionnel avec ?)
 }
 
 /**
@@ -163,7 +164,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           prix_pizza: parseFloat(pizza.prix_pizza) || 0,  // Conversion en nombre
           quantity: 1,
           ingredients: pizza.ingredients,
-          base: pizza.base
+          base: pizza.base,
+          image_url: pizza.image_url  // Ajout de l'URL de l'image
         };
         // Spread operator pour créer un nouveau tableau avec l'item ajouté
         return [...prevItems, newItem];

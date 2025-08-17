@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useCart } from '../contexts/CartContext';
-import "./Cart.css";
+import "./panier.css";
 
 const Cart: React.FC = () => {
     const { cartItems, updateQuantity, removeFromCart, getTotalPrice } = useCart();
@@ -13,21 +13,21 @@ const Cart: React.FC = () => {
 
     if (cartItems.length === 0) {
         return (
-            <div className="cart">
-                <div className="container">
-                    <header className="cart-header">
+            <div className="panier-container">
+                <div className="panier-wrapper">
+                    <header className="panier-header">
                         <h1>Votre Panier</h1>
                     </header>
 
-                    <div className="cart-content">
-                        <div className="empty-cart">
-                            <div className="empty-cart-icon">🛒</div>
+                    <div className="panier-content">
+                        <div className="panier-empty">
+                            <div className="panier-empty-icon">🛒</div>
                             <h2>Votre panier est vide</h2>
                             <p>
                                 Ajoutez des pizzas délicieuses à votre panier
                                 pour commencer votre commande.
                             </p>
-                            <Link to="/menu" className="btn btn-discover-menu">
+                            <Link to="/menu" className="panier-btn panier-btn-primary">
                                 Découvrir notre menu
                             </Link>
                         </div>
@@ -38,9 +38,9 @@ const Cart: React.FC = () => {
     }
 
     return (
-        <div className="cart">
-            <div className="container">
-                <header className="cart-header">
+        <div className="panier-container">
+            <div className="panier-wrapper">
+                <header className="panier-header">
                     <h1>Votre Panier</h1>
                     <p>
                         {cartItems.length} article
@@ -48,28 +48,44 @@ const Cart: React.FC = () => {
                     </p>
                 </header>
 
-                <div className="cart-content">
-                    <div className="cart-items">
+                <div className="panier-content">
+                    <div className="panier-items">
                         {cartItems.map((item) => (
-                            <div key={item.id} className="cart-item">
-                                <div className="item-image">
-                                    <div className="placeholder-image">
-                                        🍕
-                                    </div>
+                            <div key={item.id} className="panier-item">
+                                <div className="panier-item-image">
+                                    {item.image_url ? (
+                                        <img 
+                                            src={item.image_url} 
+                                            alt={item.nom_pizza}
+                                            className="panier-pizza-image"
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.style.display = 'none';
+                                                const parent = target.parentElement;
+                                                if (parent) {
+                                                    parent.innerHTML = '<div class="panier-placeholder-image">🍕</div>';
+                                                }
+                                            }}
+                                        />
+                                    ) : (
+                                        <div className="panier-placeholder-image">
+                                            🍕
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div className="item-details">
+                                <div className="panier-item-details">
                                     <h3>{item.nom_pizza}</h3>
-                                    <p className="item-ingredients">
+                                    <p className="panier-item-ingredients">
                                         {item.ingredients}
                                     </p>
-                                    <p className="item-price">
+                                    <p className="panier-item-price">
                                         {item.prix_pizza.toFixed(2)}€
                                     </p>
                                 </div>
 
-                                <div className="item-controls">
-                                    <div className="quantity-controls">
+                                <div className="panier-item-controls">
+                                    <div className="panier-quantity-controls">
                                         <button
                                             onClick={() =>
                                                 updateQuantity(
@@ -77,11 +93,11 @@ const Cart: React.FC = () => {
                                                     item.quantity - 1
                                                 )
                                             }
-                                            className="quantity-btn"
+                                            className="panier-quantity-btn"
                                         >
                                             -
                                         </button>
-                                        <span className="quantity">
+                                        <span className="panier-quantity">
                                             {item.quantity}
                                         </span>
                                         <button
@@ -91,7 +107,7 @@ const Cart: React.FC = () => {
                                                     item.quantity + 1
                                                 )
                                             }
-                                            className="quantity-btn"
+                                            className="panier-quantity-btn"
                                         >
                                             +
                                         </button>
@@ -99,13 +115,13 @@ const Cart: React.FC = () => {
 
                                     <button
                                         onClick={() => removeFromCart(item.id)}
-                                        className="remove-btn"
+                                        className="panier-remove-btn"
                                     >
                                         Supprimer
                                     </button>
                                 </div>
 
-                                <div className="item-total">
+                                <div className="panier-item-total">
                                     {(item.prix_pizza * item.quantity).toFixed(
                                         2
                                     )}
@@ -115,35 +131,52 @@ const Cart: React.FC = () => {
                         ))}
                     </div>
 
-                    <div className="cart-summary">
-                        <div className="summary-card">
+                    <div className="panier-summary">
+                        <div className="panier-summary-card">
                             <h3>Résumé de la commande</h3>
 
-                            <div className="summary-line">
+                            <div className="panier-order-details">
+                                {cartItems.map((item) => (
+                                    <div key={item.id} className="panier-order-item">
+                                        <div className="panier-order-item-info">
+                                            <span className="panier-order-item-name">{item.nom_pizza}</span>
+                                            <span className="panier-order-item-price">{item.prix_pizza.toFixed(2)}€</span>
+                                        </div>
+                                        <div className="panier-order-item-quantity">
+                                            <span>Quantité: {item.quantity}</span>
+                                            <span className="panier-order-item-subtotal">{(item.prix_pizza * item.quantity).toFixed(2)}€</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="panier-summary-divider"></div>
+
+                            <div className="panier-summary-line">
                                 <span>Sous-total:</span>
                                 <span>{getTotalPrice().toFixed(2)}€</span>
                             </div>
 
-                            <div className="summary-line">
+                            <div className="panier-summary-line">
                                 <span>Livraison:</span>
                                 <span>Gratuite</span>
                             </div>
 
-                            <div className="summary-line total">
+                            <div className="panier-summary-line panier-total">
                                 <span>Total:</span>
                                 <span>{getTotalPrice().toFixed(2)}€</span>
                             </div>
 
                             <button
                                 onClick={handleCheckout}
-                                className="btn btn-discover-menu btn-large"
+                                className="panier-btn panier-btn-primary panier-btn-large"
                             >
                                 Payer avec PayPal
                             </button>
 
                             <Link
                                 to="/menu"
-                                className="btn btn-secondary btn-large"
+                                className="panier-btn panier-btn-secondary panier-btn-large"
                             >
                                 Continuer mes achats
                             </Link>
