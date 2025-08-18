@@ -22,7 +22,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // Import d'icônes depuis lucide-react
-import { ShoppingCart, Settings } from 'lucide-react';
+import { ShoppingCart, Settings, Plus, Minus, X } from 'lucide-react';
 
 // Import de notre hook personnalisé pour le panier
 import { useCart } from '../contexts/CartContext';
@@ -58,6 +58,33 @@ interface Pizza {
 interface Category {
   id_pizza_categories: number;      // Identifiant unique de la catégorie
   nom_pizza_categories: string;     // Nom de la catégorie (ex: "Classiques")
+}
+
+/**
+ * Interface Ingredient - Définit la structure d'un ingrédient
+ */
+interface Ingredient {
+  id_ingredients: number;    // Identifiant unique de l'ingrédient
+  nom_ingredients: string;   // Nom de l'ingrédient
+  prix_ingredients: number;  // Prix de l'ingrédient
+  disponible?: boolean;      // Disponibilité de l'ingrédient
+}
+
+/**
+ * Interface IngredientWithQuantity - Ingrédient avec quantité
+ */
+interface IngredientWithQuantity {
+  ingredient: Ingredient;
+  quantity: number;
+}
+
+/**
+ * Interface CustomizedPizza - Pizza avec modifications temporaires
+ */
+interface CustomizedPizza extends Pizza {
+  addedIngredients: IngredientWithQuantity[];    // Ingrédients ajoutés avec quantités
+  removedIngredients: string[];      // Noms des ingrédients supprimés
+  finalPrice: number;                // Prix final calculé
 }
 
 // ========================================
@@ -100,6 +127,14 @@ const Menu: React.FC = () => {
   
   // Message d'erreur (null si pas d'erreur, string si erreur)
   const [error, setError] = useState<string | null>(null);
+  
+  // États pour la personnalisation
+  const [showCustomizeModal, setShowCustomizeModal] = useState(false);
+  const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
+  const [availableIngredients, setAvailableIngredients] = useState<Ingredient[]>([]);
+  const [addedIngredients, setAddedIngredients] = useState<IngredientWithQuantity[]>([]);
+  const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
+  const [customizationLoading, setCustomizationLoading] = useState(false);
 
   // ========================================
   // EFFET DE BORD - CHARGEMENT DES DONNÉES
@@ -165,6 +200,24 @@ const Menu: React.FC = () => {
     }
   };
 
+  /**
+   * Fonction fetchIngredients - Récupère les ingrédients disponibles
+   */
+  const fetchIngredients = async () => {
+    try {
+      setCustomizationLoading(true);
+      const response = await axios.get('http://localhost:5000/api/ingredients');
+      const ingredients = response.data.data || response.data;
+      // Filtrer seulement les ingrédients disponibles
+      setAvailableIngredients(ingredients.filter((ing: Ingredient) => ing.disponible));
+    } catch (err) {
+      console.error('Erreur lors du chargement des ingrédients:', err);
+      alert('Erreur lors du chargement des ingrédients');
+    } finally {
+      setCustomizationLoading(false);
+    }
+  };
+
   // ========================================
   // TRAITEMENT DES DONNÉES
   // ========================================
@@ -218,15 +271,128 @@ const Menu: React.FC = () => {
   };
 
   /**
-   * Fonction customizePizza - Personnaliser une pizza
-   * 
-   * Fonctionnalité future pour personnaliser les pizzas
-   * Pour l'instant, juste un placeholder
+   * Fonction customizePizza - Ouvrir le modal de personnalisation
    */
-  const customizePizza = (pizza: Pizza) => {
-    // Logique de personnalisation (à implémenter dans une future version)
-    console.log('Personnalisation de:', pizza);
-    alert(`Personnalisation de ${pizza.nom_pizza} - Fonctionnalité à venir !`);
+  const customizePizza = async (pizza: Pizza) => {
+    setSelectedPizza(pizza);
+    setAddedIngredients([]);
+    setRemovedIngredients([]);
+    setShowCustomizeModal(true);
+    await fetchIngredients();
+  };
+
+  /**
+   * Fonction closeCustomizeModal - Fermer le modal de personnalisation
+   */
+  const closeCustomizeModal = () => {
+    setShowCustomizeModal(false);
+    setSelectedPizza(null);
+    setAddedIngredients([]);
+    setRemovedIngredients([]);
+  };
+
+  /**
+   * Fonction addIngredient - Ajouter un ingrédient à la pizza
+   */
+  const addIngredient = (ingredient: Ingredient) => {
+    const existingIngredient = addedIngredients.find(ing => ing.ingredient.id_ingredients === ingredient.id_ingredients);
+    
+    if (existingIngredient) {
+      // Si l'ingrédient existe déjà, augmenter la quantité
+      setAddedIngredients(addedIngredients.map(ing => 
+        ing.ingredient.id_ingredients === ingredient.id_ingredients 
+          ? { ...ing, quantity: ing.quantity + 1 }
+          : ing
+      ));
+    } else {
+      // Si l'ingrédient n'existe pas, l'ajouter avec quantité 1
+      setAddedIngredients([...addedIngredients, { ingredient, quantity: 1 }]);
+    }
+  };
+
+  /**
+   * Fonction removeAddedIngredient - Supprimer complètement un ingrédient ajouté
+   */
+  const removeAddedIngredient = (ingredientId: number) => {
+    setAddedIngredients(addedIngredients.filter(ing => ing.ingredient.id_ingredients !== ingredientId));
+  };
+
+  /**
+   * Fonction increaseIngredientQuantity - Augmenter la quantité d'un ingrédient
+   */
+  const increaseIngredientQuantity = (ingredientId: number) => {
+    setAddedIngredients(addedIngredients.map(ing => 
+      ing.ingredient.id_ingredients === ingredientId 
+        ? { ...ing, quantity: ing.quantity + 1 }
+        : ing
+    ));
+  };
+
+  /**
+   * Fonction decreaseIngredientQuantity - Diminuer la quantité d'un ingrédient
+   * Si la quantité atteint 0, l'ingrédient est automatiquement supprimé
+   */
+  const decreaseIngredientQuantity = (ingredientId: number) => {
+    setAddedIngredients(addedIngredients.map(ing => {
+      if (ing.ingredient.id_ingredients === ingredientId) {
+        const newQuantity = ing.quantity - 1;
+        return { ...ing, quantity: newQuantity };
+      }
+      return ing;
+    }).filter(ing => ing.quantity > 0)); // Supprimer automatiquement si quantité = 0
+  };
+
+  /**
+   * Fonction toggleRemovedIngredient - Basculer la suppression d'un ingrédient de base
+   */
+  const toggleRemovedIngredient = (ingredientName: string) => {
+    if (removedIngredients.includes(ingredientName)) {
+      setRemovedIngredients(removedIngredients.filter(name => name !== ingredientName));
+    } else {
+      setRemovedIngredients([...removedIngredients, ingredientName]);
+    }
+  };
+
+  /**
+   * Fonction calculateCustomPrice - Calculer le prix de la pizza personnalisée
+   */
+  const calculateCustomPrice = () => {
+    if (!selectedPizza) return 0;
+    const basePrice = parseFloat(selectedPizza.prix_pizza) || 0;
+    const addedPrice = addedIngredients.reduce((sum, ing) => {
+      const ingredientPrice = parseFloat(ing.ingredient.prix_ingredients) || 0;
+      return sum + (ingredientPrice * ing.quantity);
+    }, 0);
+    return basePrice + addedPrice;
+  };
+
+  /**
+   * Fonction addCustomizedPizzaToCart - Ajouter la pizza personnalisée au panier
+   */
+  const addCustomizedPizzaToCart = () => {
+    if (!selectedPizza) return;
+
+    const customizedPizza: CustomizedPizza = {
+      ...selectedPizza,
+      addedIngredients,
+      removedIngredients,
+      finalPrice: calculateCustomPrice(),
+      // Modifier le nom pour indiquer la personnalisation
+      nom_pizza: `${selectedPizza.nom_pizza} (Personnalisée)`,
+      prix_pizza: calculateCustomPrice()
+    };
+
+    addToCart(customizedPizza);
+    alert(`${selectedPizza.nom_pizza} personnalisée ajoutée au panier !`);
+    closeCustomizeModal();
+  };
+
+  /**
+   * Fonction getBaseIngredients - Obtenir la liste des ingrédients de base
+   */
+  const getBaseIngredients = () => {
+    if (!selectedPizza?.ingredients) return [];
+    return selectedPizza.ingredients.split(',').map(ing => ing.trim());
   };
 
   // ========================================
@@ -398,6 +564,166 @@ const Menu: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Modal de personnalisation */}
+      {showCustomizeModal && selectedPizza && (
+        <div className="customize-modal-overlay" onClick={closeCustomizeModal}>
+          <div className="customize-modal pizza-customize-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="customize-header">
+              <h2>Personnaliser {selectedPizza.nom_pizza}</h2>
+              <button className="close-btn" onClick={closeCustomizeModal}>
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="customize-content">
+              {/* Informations de la pizza */}
+              <div className="pizza-info-section">
+                <div className="pizza-image-small">
+                  {selectedPizza.image_url ? (
+                    <img 
+                      src={selectedPizza.image_url.startsWith('/uploads/') 
+                        ? `http://localhost:5000${selectedPizza.image_url}` 
+                        : selectedPizza.image_url.startsWith('/images/') 
+                          ? `http://localhost:5000${selectedPizza.image_url}` 
+                          : selectedPizza.image_url
+                      } 
+                      alt={selectedPizza.nom_pizza}
+                    />
+                  ) : (
+                    <div className="placeholder-image-small">
+                      <span>🍕</span>
+                    </div>
+                  )}
+                </div>
+                <div className="pizza-details-small">
+                  <h3>{selectedPizza.nom_pizza}</h3>
+                  <p className="base-price">Prix de base: {selectedPizza.prix_pizza}€</p>
+                  <p className="current-price">Prix actuel: {calculateCustomPrice().toFixed(2)}€</p>
+                </div>
+              </div>
+
+              {/* Ingrédients de base */}
+              <div className="base-ingredients-section">
+                <h3>Ingrédients de base</h3>
+                <div className="ingredients-list">
+                  {(() => {
+                    const baseIngredients = getBaseIngredients();
+                    console.log('baseIngredients:', baseIngredients);
+                    return baseIngredients.map((ingredient, index) => {
+                      console.log('mapping base ingredient:', ingredient, 'index:', index);
+                      return (
+                        <div key={index} className={`ingredient-item base-ingredient ${
+                          removedIngredients.includes(ingredient) ? 'removed' : ''
+                        }`}>
+                          <span className="ingredient-name">{ingredient}</span>
+                          <button 
+                            className="remove-ingredient-btn"
+                            onClick={() => toggleRemovedIngredient(ingredient)}
+                            title={removedIngredients.includes(ingredient) ? 'Remettre' : 'Supprimer'}
+                          >
+                            {removedIngredients.includes(ingredient) ? <Plus size={16} /> : <Minus size={16} />}
+                          </button>
+                        </div>
+                      );
+                    });
+                  })()}
+                </div>
+              </div>
+
+              {/* Ingrédients ajoutés */}
+              {addedIngredients.length > 0 && (
+                <div className="added-ingredients-section">
+                  <h3>Ingrédients ajoutés</h3>
+                  <div className="ingredients-list">
+                    {(() => {
+                      console.log('addedIngredients for mapping:', addedIngredients);
+                      return addedIngredients.map((ingredientWithQuantity) => {
+                        console.log('mapping added ingredient:', ingredientWithQuantity);
+                        const { ingredient, quantity } = ingredientWithQuantity;
+                        return (
+                          <div key={ingredient.id_ingredients} className="ingredient-item added-ingredient">
+                            <span className="ingredient-name">{ingredient.nom_ingredients}</span>
+                            <div className="ingredient-controls">
+                              <button 
+                                className="quantity-btn decrease-btn"
+                                onClick={() => decreaseIngredientQuantity(ingredient.id_ingredients)}
+                                title="Diminuer la quantité"
+                              >
+                                <Minus size={14} />
+                              </button>
+                              <span className="ingredient-quantity">{quantity}</span>
+                              <button 
+                                className="quantity-btn increase-btn"
+                                onClick={() => increaseIngredientQuantity(ingredient.id_ingredients)}
+                                title="Augmenter la quantité"
+                              >
+                                <Plus size={14} />
+                              </button>
+                            </div>
+                            <span className="ingredient-price">+{(parseFloat(ingredient.prix_ingredients) * quantity).toFixed(2)}€</span>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+              )}
+
+              {/* Ingrédients disponibles */}
+              <div className="available-ingredients-section">
+                <h3>Ajouter des ingrédients</h3>
+                {customizationLoading ? (
+                  <div className="loading-ingredients">
+                    <p>Chargement des ingrédients...</p>
+                  </div>
+                ) : (
+                  <div className="ingredients-grid">
+                    {(() => {
+                      console.log('availableIngredients:', availableIngredients);
+                      console.log('addedIngredients:', addedIngredients);
+                      // Filtrer les ingrédients déjà ajoutés
+                      const filteredIngredients = availableIngredients.filter(ingredient => 
+                        !addedIngredients.some(added => added.ingredient.id_ingredients === ingredient.id_ingredients)
+                      );
+                      return filteredIngredients.map((ingredient) => {
+                        console.log('mapping ingredient:', ingredient);
+                        return (
+                          <div key={ingredient.id_ingredients} className="available-ingredient">
+                            <span className="ingredient-name">{ingredient.nom_ingredients}</span>
+                            <span className="ingredient-price">+{ingredient.prix_ingredients}€</span>
+                            <button 
+                              className="add-ingredient-btn"
+                              onClick={() => addIngredient(ingredient)}
+                              title="Ajouter"
+                            >
+                              <Plus size={16} />
+                            </button>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="customize-footer">
+              <div className="final-price">
+                <strong>Prix final: {calculateCustomPrice().toFixed(2)}€</strong>
+              </div>
+              <div className="customize-actions">
+                <button className="btn-cancel" onClick={closeCustomizeModal}>
+                  Annuler
+                </button>
+                <button className="btn-add-to-cart" onClick={addCustomizedPizzaToCart}>
+                  Ajouter au panier
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

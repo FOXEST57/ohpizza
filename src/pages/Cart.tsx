@@ -76,9 +76,48 @@ const Cart: React.FC = () => {
 
                                 <div className="panier-item-details">
                                     <h3>{item.nom_pizza}</h3>
-                                    <p className="panier-item-ingredients">
-                                        {item.ingredients}
-                                    </p>
+                                    {/* Affichage différent pour les pizzas personnalisées */}
+                                    {(item as any).addedIngredients || (item as any).removedIngredients ? (
+                                        <div className="panier-customized-ingredients">
+                                            {/* Ingrédients de base supprimés (en rouge barré) */}
+                                            {(item as any).removedIngredients && (item as any).removedIngredients.length > 0 && (
+                                                <div className="panier-removed-ingredients">
+                                                    {(item as any).removedIngredients.map((ingredient: string, index: number) => (
+                                                        <span key={index} style={{color: 'red', textDecoration: 'line-through', marginRight: '8px'}}>
+                                                            {ingredient}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            {/* Ingrédients ajoutés (en vert avec quantité) */}
+                                            {(item as any).addedIngredients && (item as any).addedIngredients.length > 0 && (
+                                                <div className="panier-added-ingredients">
+                                                    {(item as any).addedIngredients.map((ing: any, index: number) => (
+                                                        <span key={index} style={{color: 'green', marginRight: '8px'}}>
+                                                            {ing.quantity}x {ing.ingredient.nom_ingredients}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            {/* Ingrédients de base restants (normaux) */}
+                                            {item.ingredients && (
+                                                <div className="panier-base-ingredients">
+                                                    {item.ingredients.split(', ').filter((ingredient: string) => 
+                                                        !(item as any).removedIngredients || !(item as any).removedIngredients.includes(ingredient)
+                                                    ).map((ingredient: string, index: number) => (
+                                                        <span key={index} style={{marginRight: '8px'}}>
+                                                            {ingredient}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        /* Affichage normal pour les pizzas non personnalisées */
+                                        <p className="panier-item-ingredients">
+                                            {item.ingredients}
+                                        </p>
+                                    )}
                                     <p className="panier-item-price">
                                         {item.prix_pizza.toFixed(2)}€
                                     </p>

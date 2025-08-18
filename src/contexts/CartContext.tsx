@@ -22,19 +22,38 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 // ========================================
 
 /**
+ * Interface Ingredient - Structure d'un ingrédient
+ */
+export interface Ingredient {
+  id_ingredients: number;
+  nom_ingredients: string;
+  prix_ingredients: string;
+}
+
+/**
+ * Interface IngredientWithQuantity - Ingrédient avec quantité
+ */
+export interface IngredientWithQuantity {
+  ingredient: Ingredient;
+  quantity: number;
+}
+
+/**
  * Interface CartItem - Définit la structure d'un article dans le panier
  * 
  * Une interface en TypeScript est comme un "contrat" qui dit :
  * "Tout objet CartItem DOIT avoir ces propriétés avec ces types"
  */
 export interface CartItem {
-  id: number;              // Identifiant unique de la pizza
-  nom_pizza: string;       // Nom de la pizza (ex: "Margherita")
+  id: string;              // Identifiant unique de l'élément dans le panier
+  nom_pizza: string;       // Nom de la pizza
   prix_pizza: number;      // Prix unitaire de la pizza
   quantity: number;        // Quantité commandée
   ingredients?: string;    // Ingrédients supplémentaires (optionnel avec ?)
   base?: string;          // Type de base (optionnel avec ?)
   image_url?: string;     // URL de l'image (optionnel avec ?)
+  addedIngredients?: IngredientWithQuantity[];  // Ingrédients ajoutés pour pizzas personnalisées
+  removedIngredients?: string[];                // Ingrédients supprimés pour pizzas personnalisées
 }
 
 /**
@@ -44,8 +63,8 @@ export interface CartItem {
 interface CartContextType {
   cartItems: CartItem[];                              // Liste des articles dans le panier
   addToCart: (pizza: any) => void;                   // Fonction pour ajouter une pizza
-  removeFromCart: (id: number) => void;              // Fonction pour supprimer une pizza
-  updateQuantity: (id: number, quantity: number) => void; // Fonction pour changer la quantité
+  removeFromCart: (id: string) => void;              // Fonction pour supprimer une pizza
+  updateQuantity: (id: string, quantity: number) => void; // Fonction pour changer la quantité
   clearCart: () => void;                             // Fonction pour vider le panier
   getTotalPrice: () => number;                       // Fonction pour calculer le prix total
   getTotalItems: () => number;                       // Fonction pour compter les articles
@@ -135,37 +154,72 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   // ========================================
   
   /**
+   * Fonction helper pour comparer les personnalisations de deux pizzas
+   * Retourne true si les personnalisations sont identiques
+   */
+  const areCustomizationsEqual = (item1: CartItem, item2: any) => {
+    // Comparer les ingrédients supprimés
+    const removed1 = item1.removedIngredients || [];
+    const removed2 = item2.removedIngredients || [];
+    
+    if (removed1.length !== removed2.length) return false;
+    if (!removed1.every(ing => removed2.includes(ing))) return false;
+    
+    // Comparer les ingrédients ajoutés
+    const added1 = item1.addedIngredients || [];
+    const added2 = item2.addedIngredients || [];
+    
+    if (added1.length !== added2.length) return false;
+    
+    // Vérifier chaque ingrédient ajouté (nom et quantité)
+    for (const ing1 of added1) {
+      const ing2 = added2.find(ing => ing.ingredient.nom_ingredients === ing1.ingredient.nom_ingredients);
+      if (!ing2 || ing2.quantity !== ing1.quantity) return false;
+    }
+    
+    return true;
+  };
+
+  /**
    * Fonction addToCart - Ajouter une pizza au panier
    * 
-   * Cette fonction vérifie si la pizza existe déjà dans le panier :
+   * Cette fonction vérifie si la pizza existe déjà dans le panier avec les MÊMES personnalisations :
    * - Si oui : augmente la quantité de 1
-   * - Si non : ajoute la pizza avec quantité = 1
+   * - Si non : ajoute la pizza comme nouvel élément
    */
   const addToCart = (pizza: any) => {
     // setCartItems avec une fonction permet d'accéder à l'état précédent
     setCartItems(prevItems => {
       
-      // find() cherche si la pizza existe déjà dans le panier
-      const existingItem = prevItems.find(item => item.id === pizza.id_pizza);
+      // find() cherche si la pizza existe déjà avec les mêmes personnalisations
+      const existingItem = prevItems.find(item => 
+        item.id === pizza.id_pizza && areCustomizationsEqual(item, pizza)
+      );
       
       if (existingItem) {
-        // Si la pizza existe déjà, on augmente sa quantité
+        // Si la pizza existe déjà avec les mêmes personnalisations, on augmente sa quantité
         // map() crée un nouveau tableau en transformant chaque élément
         return prevItems.map(item =>
-          item.id === pizza.id_pizza
+          item === existingItem
             ? { ...item, quantity: item.quantity + 1 }  // Spread operator + modification
             : item  // Garde l'item tel quel
         );
       } else {
-        // Si la pizza n'existe pas, on l'ajoute au panier
+        // Si la pizza n'existe pas ou a des personnalisations différentes, on l'ajoute au panier
+        // Générer un ID unique pour chaque élément du panier (combinaison de l'ID pizza + timestamp)
+        const uniqueId = `${pizza.id_pizza}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        
         const newItem: CartItem = {
-          id: pizza.id_pizza,
+          id: uniqueId,  // ID unique pour cet élément spécifique du panier
           nom_pizza: pizza.nom_pizza,
           prix_pizza: parseFloat(pizza.prix_pizza) || 0,  // Conversion en nombre
           quantity: 1,
           ingredients: pizza.ingredients,
           base: pizza.base,
-          image_url: pizza.image_url  // Ajout de l'URL de l'image
+          image_url: pizza.image_url,  // Ajout de l'URL de l'image
+          // Copier les propriétés de personnalisation si elles existent
+          addedIngredients: pizza.addedIngredients || undefined,
+          removedIngredients: pizza.removedIngredients || undefined
         };
         // Spread operator pour créer un nouveau tableau avec l'item ajouté
         return [...prevItems, newItem];
@@ -179,7 +233,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
    * filter() crée un nouveau tableau en gardant seulement les éléments
    * qui respectent la condition (ici : id différent de celui à supprimer)
    */
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
@@ -189,7 +243,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
    * Si la quantité devient 0 ou négative, on supprime l'article
    * Sinon, on met à jour la quantité
    */
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(id);  // Supprimer si quantité <= 0
       return;
