@@ -19,6 +19,21 @@ const Contact: React.FC = () => {
     telephone: '',
     message: ''
   });
+  
+  // État pour les notifications
+  const [notification, setNotification] = useState<string>('');
+  const [showNotification, setShowNotification] = useState(false);
+
+  /**
+   * Fonction pour afficher une notification temporaire
+   */
+  const showNotificationMessage = (message: string) => {
+    setNotification(message);
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 2000);
+  };
 
   // Fonction pour formater l'heure (supprimer les secondes)
   const formatTime = (time: string | null): string => {
@@ -52,7 +67,7 @@ const Contact: React.FC = () => {
     e.preventDefault();
     // Ici vous pouvez ajouter la logique d'envoi du formulaire
     console.log('Formulaire soumis:', formData);
-    alert('Votre message a été envoyé ! Nous vous répondrons dans les plus brefs délais.');
+    showNotificationMessage('Votre message a été envoyé ! Nous vous répondrons dans les plus brefs délais.');
     setFormData({ nom: '', email: '', telephone: '', message: '' });
   };
 
@@ -222,6 +237,13 @@ const Contact: React.FC = () => {
           </form>
         </div>
       </div>
+      
+      {/* Notification */}
+      {showNotification && (
+        <div className="notification">
+          {notification}
+        </div>
+      )}
     </div>
   );
 };

@@ -83,6 +83,9 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   backdrop-filter: blur(10px);
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 500px !important;
 }
 
 .pizza-card:hover {
@@ -124,8 +127,10 @@
   padding: 20px !important;
   display: flex !important;
   flex-direction: column !important;
+  justify-content: space-between !important;
   background: white !important;
   border-radius: 0 0 15px 15px;
+  flex: 1 !important;
 }
 
 .pizza-header {
@@ -166,6 +171,7 @@
 .pizza-details {
   margin-bottom: 16px !important;
   display: block !important;
+  flex-grow: 1 !important;
 }
 
 .pizza-ingredients {
@@ -209,7 +215,7 @@
 .pizza-actions {
   display: flex !important;
   gap: 12px !important;
-  margin-top: 8px !important;
+  margin-top: auto !important;
   width: 100% !important;
 }
 
@@ -440,6 +446,32 @@
   .pizza-ingredients {
     font-size: 0.85rem;
     padding: 10px;
+  }
+}
+
+/* Notification styles */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #22c55e;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  font-weight: 500;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 

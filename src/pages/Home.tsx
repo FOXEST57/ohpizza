@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Clock, MapPin, Phone, Mail } from 'lucide-react';
+import { Star, Clock, MapPin, Phone, Mail, ShoppingCart } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
 import './Home.css';
 
 interface Horaire {
@@ -16,6 +17,8 @@ const Home: React.FC = () => {
   const [avisRecents, setAvisRecents] = useState([]);
   const [noteMoyenne, setNoteMoyenne] = useState(0);
   const [horaires, setHoraires] = useState<Horaire[]>([]);
+  const [showNotification, setShowNotification] = useState('');
+  const { addToCart } = useCart();
 
   // Fonction pour formater l'heure (supprimer les secondes)
   const formatTime = (time: string | null): string => {
@@ -24,28 +27,31 @@ const Home: React.FC = () => {
     return time.substring(0, 5);
   };
 
-  // Données mock pour les pizzas populaires
+  // Données des pizzas populaires avec toutes les propriétés requises
   const pizzasPopulaires = [
     {
-      id: 1,
-      nom: "Margherita",
-      description: "Tomate, mozzarella, basilic frais",
-      prix: 12.50,
-      image: "/images/pizza.jpg"
+      id_pizza: 1,
+      nom_pizza: "Pizza Margherita",
+      prix_pizza: 12.90,
+      ingredients: "Tomate, mozzarella, basilic frais",
+      base: "Pâte traditionnelle",
+      image_url: "https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=delicious%20margherita%20pizza%20with%20fresh%20basil%20and%20mozzarella%20cheese%20on%20wooden%20table%20restaurant%20style&image_size=square"
     },
     {
-      id: 2,
-      nom: "Regina",
-      description: "Tomate, mozzarella, jambon, champignons",
-      prix: 14.90,
-      image: "/images/pizza.jpg"
+      id_pizza: 2,
+      nom_pizza: "Pizza Pepperoni",
+      prix_pizza: 14.90,
+      ingredients: "Tomate, mozzarella, pepperoni épicé",
+      base: "Pâte traditionnelle",
+      image_url: "https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=pepperoni%20pizza%20with%20spicy%20salami%20and%20cheese%20on%20wooden%20table%20restaurant%20style&image_size=square"
     },
     {
-      id: 3,
-      nom: "4 Fromages",
-      description: "Mozzarella, gorgonzola, parmesan, chèvre",
-      prix: 16.50,
-      image: "/images/pizza.jpg"
+      id_pizza: 3,
+      nom_pizza: "Pizza Quattro Formaggi",
+      prix_pizza: 16.90,
+      ingredients: "Mozzarella, gorgonzola, parmesan, chèvre",
+      base: "Pâte traditionnelle",
+      image_url: "https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=quattro%20formaggi%20pizza%20with%20four%20different%20cheeses%20on%20wooden%20table%20restaurant%20style&image_size=square"
     }
   ];
 
@@ -87,6 +93,13 @@ const Home: React.FC = () => {
         className={`w-4 h-4 ${i < note ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
       />
     ));
+  };
+
+  // Fonction pour ajouter une pizza au panier
+  const handleAddToCart = (pizza: any) => {
+    addToCart(pizza);
+    setShowNotification(pizza.nom_pizza);
+    setTimeout(() => setShowNotification(''), 3000);
   };
 
 
@@ -139,40 +152,32 @@ const Home: React.FC = () => {
       <section className="pizzas-populaires">
         <div className="container">
           <h2 className="section-title">Nos Pizzas Populaires</h2>
+          {showNotification && (
+            <div className="notification-success">
+              <ShoppingCart className="w-5 h-5" />
+              {showNotification} ajoutée au panier !
+            </div>
+          )}
           <div className="pizzas-grid">
-            <div className="pizza-card-new">
-              <div className="pizza-image-new">
-                <img src="https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=delicious%20margherita%20pizza%20with%20fresh%20basil%20and%20mozzarella%20cheese%20on%20wooden%20table%20restaurant%20style&image_size=square" alt="Pizza Margherita" />
+            {pizzasPopulaires.map((pizza) => (
+              <div key={pizza.id_pizza} className="pizza-card-new">
+                <div className="pizza-image-new">
+                  <img src={pizza.image_url} alt={pizza.nom_pizza} />
+                </div>
+                <div className="pizza-info-new">
+                  <h3>{pizza.nom_pizza}</h3>
+                  <p className="pizza-description-new">{pizza.ingredients}</p>
+                  <div className="pizza-price-new">{pizza.prix_pizza.toFixed(2)}€</div>
+                  <button 
+                    onClick={() => handleAddToCart(pizza)}
+                    className="pizza-btn-new"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Commander
+                  </button>
+                </div>
               </div>
-              <div className="pizza-info-new">
-                <h3>Pizza Margherita</h3>
-                <p className="pizza-description-new">Tomate, mozzarella, basilic frais</p>
-                <div className="pizza-price-new">12.90€</div>
-                <Link to="/menu" className="pizza-btn-new">Commander</Link>
-              </div>
-            </div>
-            <div className="pizza-card-new">
-              <div className="pizza-image-new">
-                <img src="https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=pepperoni%20pizza%20with%20spicy%20salami%20and%20cheese%20on%20wooden%20table%20restaurant%20style&image_size=square" alt="Pizza Pepperoni" />
-              </div>
-              <div className="pizza-info-new">
-                <h3>Pizza Pepperoni</h3>
-                <p className="pizza-description-new">Tomate, mozzarella, pepperoni épicé</p>
-                <div className="pizza-price-new">14.90€</div>
-                <Link to="/menu" className="pizza-btn-new">Commander</Link>
-              </div>
-            </div>
-            <div className="pizza-card-new">
-              <div className="pizza-image-new">
-                <img src="https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=quattro%20formaggi%20pizza%20with%20four%20different%20cheeses%20on%20wooden%20table%20restaurant%20style&image_size=square" alt="Pizza Quattro Formaggi" />
-              </div>
-              <div className="pizza-info-new">
-                <h3>Pizza Quattro Formaggi</h3>
-                <p className="pizza-description-new">Mozzarella, gorgonzola, parmesan, chèvre</p>
-                <div className="pizza-price-new">16.90€</div>
-                <Link to="/menu" className="pizza-btn-new">Commander</Link>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

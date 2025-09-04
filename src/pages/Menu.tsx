@@ -135,6 +135,21 @@ const Menu: React.FC = () => {
   const [addedIngredients, setAddedIngredients] = useState<IngredientWithQuantity[]>([]);
   const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
   const [customizationLoading, setCustomizationLoading] = useState(false);
+  
+  // État pour les notifications
+  const [notification, setNotification] = useState<string>('');
+  const [showNotification, setShowNotification] = useState(false);
+
+  /**
+   * Fonction pour afficher une notification temporaire
+   */
+  const showNotificationMessage = (message: string) => {
+    setNotification(message);
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 2000);
+  };
 
   // ========================================
   // EFFET DE BORD - CHARGEMENT DES DONNÉES
@@ -212,7 +227,7 @@ const Menu: React.FC = () => {
       setAvailableIngredients(ingredients.filter((ing: Ingredient) => ing.disponible));
     } catch (err) {
       console.error('Erreur lors du chargement des ingrédients:', err);
-      alert('Erreur lors du chargement des ingrédients');
+      showNotificationMessage('Erreur lors du chargement des ingrédients');
     } finally {
       setCustomizationLoading(false);
     }
@@ -267,7 +282,7 @@ const Menu: React.FC = () => {
    */
   const handleAddToCart = (pizza: Pizza) => {
     addToCart(pizza);  // Ajouter au panier via le Context
-    alert(`${pizza.nom_pizza} ajoutée au panier !`);  // Confirmation utilisateur
+    showNotificationMessage(`${pizza.nom_pizza} ajoutée au panier !`);  // Confirmation utilisateur
   };
 
   /**
@@ -358,9 +373,9 @@ const Menu: React.FC = () => {
    */
   const calculateCustomPrice = () => {
     if (!selectedPizza) return 0;
-    const basePrice = parseFloat(selectedPizza.prix_pizza) || 0;
+    const basePrice = parseFloat(selectedPizza.prix_pizza.toString()) || 0;
     const addedPrice = addedIngredients.reduce((sum, ing) => {
-      const ingredientPrice = parseFloat(ing.ingredient.prix_ingredients) || 0;
+      const ingredientPrice = parseFloat(ing.ingredient.prix_ingredients.toString()) || 0;
       return sum + (ingredientPrice * ing.quantity);
     }, 0);
     return basePrice + addedPrice;
@@ -383,7 +398,7 @@ const Menu: React.FC = () => {
     };
 
     addToCart(customizedPizza);
-    alert(`${selectedPizza.nom_pizza} personnalisée ajoutée au panier !`);
+    showNotificationMessage(`${selectedPizza.nom_pizza} personnalisée ajoutée au panier !`);
     closeCustomizeModal();
   };
 
@@ -661,7 +676,7 @@ const Menu: React.FC = () => {
                                 <Plus size={14} />
                               </button>
                             </div>
-                            <span className="ingredient-price">+{(parseFloat(ingredient.prix_ingredients) * quantity).toFixed(2)}€</span>
+                            <span className="ingredient-price">+{(parseFloat(ingredient.prix_ingredients.toString()) * quantity).toFixed(2)}€</span>
                           </div>
                         );
                       });
@@ -691,7 +706,7 @@ const Menu: React.FC = () => {
                         return (
                           <div key={ingredient.id_ingredients} className="available-ingredient">
                             <span className="ingredient-name">{ingredient.nom_ingredients}</span>
-                            <span className="ingredient-price">+{ingredient.prix_ingredients}€</span>
+                            <span className="ingredient-price">+{parseFloat(ingredient.prix_ingredients.toString()).toFixed(2)}€</span>
                             <button 
                               className="add-ingredient-btn"
                               onClick={() => addIngredient(ingredient)}
@@ -722,6 +737,13 @@ const Menu: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Notification */}
+      {showNotification && (
+        <div className="notification">
+          {notification}
         </div>
       )}
     </div>

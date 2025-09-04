@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from '../contexts/CartContext';
 import "./panier.css";
 
 const Cart: React.FC = () => {
     const { cartItems, updateQuantity, removeFromCart, getTotalPrice } = useCart();
+    
+    // État pour les notifications
+    const [notification, setNotification] = useState<string>('');
+    const [showNotification, setShowNotification] = useState(false);
+
+    /**
+     * Fonction pour afficher une notification temporaire
+     */
+    const showNotificationMessage = (message: string) => {
+        setNotification(message);
+        setShowNotification(true);
+        setTimeout(() => {
+            setShowNotification(false);
+        }, 2000);
+    };
 
     const handleCheckout = () => {
         // Ici on intégrerait PayPal
-        alert("Redirection vers PayPal pour le paiement...");
+        showNotificationMessage("Redirection vers PayPal pour le paiement...");
     };
 
     if (cartItems.length === 0) {
@@ -223,6 +238,13 @@ const Cart: React.FC = () => {
                     </div>
                 </div>
             </div>
+            
+            {/* Notification */}
+            {showNotification && (
+                <div className="notification">
+                    {notification}
+                </div>
+            )}
         </div>
     );
 };
