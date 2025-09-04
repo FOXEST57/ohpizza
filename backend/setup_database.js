@@ -21,16 +21,18 @@ async function setupDatabase() {
     
     console.log('✅ Connecté à MySQL');
     
+    const dbName = process.env.DB_NAME || 'ohpizza';
+    
     // Supprimer la base de données existante
     console.log('🗑️ Suppression de la base de données existante...');
-    await connection.query('DROP DATABASE IF EXISTS ohpizza');
+    await connection.query(`DROP DATABASE IF EXISTS ${dbName}`);
     
     // Créer la nouvelle base de données
     console.log('🔄 Création de la nouvelle base de données...');
-    await connection.query('CREATE DATABASE ohpizza CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
-    await connection.query('USE ohpizza');
+    await connection.query(`CREATE DATABASE ${dbName} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
+    await connection.query(`USE ${dbName}`);
     
-    console.log('✅ Base de données ohpizza créée');
+    console.log(`✅ Base de données ${dbName} créée`);
     
     // Créer les tables
     console.log('🔄 Création des tables...');
@@ -175,6 +177,34 @@ async function setupDatabase() {
     `);
     console.log('✅ Relations pizza-ingrédients insérées');
     
+    // Table des horaires
+    await connection.query(`
+      CREATE TABLE horaire (
+        id_horaire INT AUTO_INCREMENT PRIMARY KEY,
+        jour VARCHAR(20) NOT NULL UNIQUE,
+        heure_debut_mat TIME NULL,
+        heure_fin_mat TIME NULL,
+        heure_debut_ap TIME NULL,
+        heure_fin_ap TIME NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✅ Table horaire créée');
+    
+    // Insertion des horaires par défaut
+    await connection.query(`
+      INSERT INTO horaire (jour, heure_debut_mat, heure_fin_mat, heure_debut_ap, heure_fin_ap) VALUES
+      ('Lundi', '11:30:00', '14:00:00', '18:00:00', '22:00:00'),
+      ('Mardi', '11:30:00', '14:00:00', '18:00:00', '22:00:00'),
+      ('Mercredi', '11:30:00', '14:00:00', '18:00:00', '22:00:00'),
+      ('Jeudi', '11:30:00', '14:00:00', '18:00:00', '22:00:00'),
+      ('Vendredi', '11:30:00', '14:00:00', '18:00:00', '23:00:00'),
+      ('Samedi', '11:30:00', '14:00:00', '18:00:00', '23:00:00'),
+      ('Dimanche', '18:00:00', NULL, NULL, '22:00:00')
+    `);
+    console.log('✅ Horaires par défaut insérés');
+    
     // Vérification finale
     const [tables] = await connection.query('SHOW TABLES');
     console.log('\n📊 Tables créées:');
@@ -186,12 +216,14 @@ async function setupDatabase() {
     const [ingredients] = await connection.query('SELECT COUNT(*) as count FROM ingredients');
     const [pizzas] = await connection.query('SELECT COUNT(*) as count FROM pizza');
     const [relations] = await connection.query('SELECT COUNT(*) as count FROM pizza_ingredients');
+    const [horaires] = await connection.query('SELECT COUNT(*) as count FROM horaire');
     
     console.log('\n📈 Données insérées:');
     console.log(`  - ${categories[0].count} catégories`);
     console.log(`  - ${ingredients[0].count} ingrédients`);
     console.log(`  - ${pizzas[0].count} pizzas`);
     console.log(`  - ${relations[0].count} relations pizza-ingrédients`);
+    console.log(`  - ${horaires[0].count} horaires d'ouverture`);
     
     console.log('\n🎉 Base de données recréée avec succès!');
     console.log('🚀 Vous pouvez maintenant redémarrer le serveur backend.');

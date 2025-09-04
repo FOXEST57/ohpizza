@@ -1,13 +1,26 @@
-# Installation automatisée Oh'Pizza sur VPS Hostinger
+# Installation automatisée Oh'Pizza sur VPS
 
-Ce guide vous explique comment déployer automatiquement l'application Oh'Pizza sur votre VPS Hostinger en utilisant le script d'installation fourni.
+Ce guide vous explique comment déployer automatiquement l'application Oh'Pizza sur votre VPS en utilisant le script d'installation amélioré qui intègre tous les correctifs nécessaires.
 
 ## Prérequis
 
-- Un VPS Hostinger avec Ubuntu 20.04 ou 22.04
+- Un VPS avec Ubuntu 20.04, 22.04 ou Debian 10/11
 - Accès root ou sudo au serveur
 - Connexion Internet stable
+- Au moins 2GB de RAM et 20GB d'espace disque
 - Repository GitHub de votre application Oh'Pizza
+
+## ⚠️ Corrections intégrées dans cette version
+
+Cette version du script d'installation corrige automatiquement :
+- ✅ Remplacement de MySQL par MariaDB (plus stable)
+- ✅ Gestion des conflits de ports (3000, 5173, 80, 443)
+- ✅ Installation automatique de TypeScript et des dépendances React
+- ✅ Correction du script de base de données (utilisation de DB_NAME)
+- ✅ Ajout de la table 'horaire' manquante
+- ✅ Amélioration de la gestion des erreurs
+- ✅ Vérifications de prérequis renforcées
+- ✅ Configuration automatique optimisée
 
 ## Étapes d'installation
 
@@ -64,26 +77,33 @@ Le script vous demandera :
 Le script automatise les étapes suivantes :
 
 ### Installation des dépendances
-- ✅ Mise à jour du système Ubuntu
+- ✅ Mise à jour du système (Ubuntu/Debian)
 - ✅ Installation de Node.js (version LTS)
 - ✅ Installation de Git
-- ✅ Installation de Nginx
-- ✅ Installation de MySQL Server
+- ✅ Installation de Nginx avec configuration optimisée
+- ✅ Installation de MariaDB Server (remplace MySQL)
 - ✅ Installation de PM2 (gestionnaire de processus)
+- ✅ Installation de TypeScript globalement
+- ✅ Installation des dépendances React manquantes
+- ✅ Gestion automatique des conflits de ports
 
 ### Configuration de la base de données
+- ✅ Installation et sécurisation de MariaDB
 - ✅ Création de la base de données `ohpizza_db`
 - ✅ Création de l'utilisateur `ohpizza_user`
 - ✅ Attribution des privilèges nécessaires
-- ✅ Initialisation des tables et données
+- ✅ Initialisation des tables et données (avec table horaire)
+- ✅ Vérification de la connectivité de la base de données
 
 ### Déploiement de l'application
-- ✅ Clonage du repository GitHub
-- ✅ Installation des dépendances (frontend et backend)
-- ✅ Configuration des fichiers `.env`
-- ✅ Build du frontend
-- ✅ Configuration de Nginx
-- ✅ Démarrage du backend avec PM2
+- ✅ Arrêt des processus utilisant les ports requis
+- ✅ Clonage du repository GitHub avec vérifications
+- ✅ Installation des dépendances backend et frontend
+- ✅ Installation automatique des types TypeScript (@types/react, etc.)
+- ✅ Configuration des fichiers `.env` (backend port 3000)
+- ✅ Build du frontend avec gestion d'erreurs TypeScript
+- ✅ Configuration de Nginx avec headers de sécurité
+- ✅ Démarrage du backend avec PM2 en mode production
 
 ### Sécurité
 - ✅ Configuration du firewall UFW
@@ -97,6 +117,15 @@ Le script automatise les étapes suivantes :
 Votre application sera accessible à :
 - **IP du serveur** : `http://VOTRE_IP_VPS`
 - **Domaine** (si configuré) : `http://VOTRE_DOMAINE.com`
+
+### Ports utilisés
+
+- **Frontend** : Port 80 (Nginx)
+- **Backend API** : Port 3000 (PM2)
+- **Base de données** : Port 3306 (MariaDB)
+- **SSH** : Port 22
+
+> ⚠️ **Important** : Le script gère automatiquement les conflits de ports en arrêtant les processus existants.
 
 ### Informations importantes
 
@@ -170,25 +199,101 @@ sudo systemctl reload nginx    # Recharger la config
 sudo nginx -t                  # Tester la configuration
 ```
 
-### Gestion MySQL
+### Gestion MariaDB
 ```bash
-sudo systemctl status mysql    # Statut
-sudo mysql -u root -p          # Connexion root
+sudo systemctl status mariadb    # Statut
+sudo systemctl restart mariadb   # Redémarrer
+sudo mysql -u root -p            # Connexion root
 mysql -u ohpizza_user -p ohpizza_db  # Connexion utilisateur app
 ```
 
 ### Logs
 ```bash
 # Logs de l'application
-tail -f /var/log/pm2/ohpizza-combined.log
+pm2 logs ohpizza-backend
+tail -f /var/log/pm2/ohpizza-error.log
+tail -f /var/log/pm2/ohpizza-out.log
 
 # Logs Nginx
-tail -f /var/log/nginx/ohpizza_access.log
-tail -f /var/log/nginx/ohpizza_error.log
+tail -f /var/log/nginx/access.log
+tail -f /var/log/nginx/error.log
 
 # Logs système
 journalctl -u nginx -f
-journalctl -u mysql -f
+journalctl -u mariadb -f
+```
+
+## Dépannage
+
+### Erreurs courantes et solutions
+
+#### 1. Erreur "EADDRINUSE" (port déjà utilisé)
+```bash
+# Vérifier les processus utilisant les ports
+sudo lsof -i :3000
+sudo lsof -i :80
+
+# Arrêter les processus si nécessaire
+sudo kill -9 PID_DU_PROCESSUS
+
+# Ou relancer le script qui gère automatiquement les conflits
+sudo ./install_ohpizza.sh
+```
+
+#### 2. Erreur "tsc: not found" (TypeScript)
+```bash
+# Installation manuelle de TypeScript
+sudo npm install -g typescript
+sudo npm install -g @types/node
+
+# Puis rebuild
+cd /var/www/ohpizza
+npm run build
+```
+
+#### 3. Erreurs de dépendances React
+```bash
+cd /var/www/ohpizza
+# Réinstaller les dépendances
+npm install react react-dom react-router-dom axios clsx tailwind-merge
+npm install --save-dev @types/react @types/react-dom
+npm run build
+```
+
+#### 4. Problème de base de données
+```bash
+# Vérifier le statut de MariaDB
+sudo systemctl status mariadb
+
+# Redémarrer MariaDB
+sudo systemctl restart mariadb
+
+# Recréer la base de données
+cd /var/www/ohpizza/backend
+node setup_database.js
+```
+
+#### 5. Problème de permissions
+```bash
+# Corriger les permissions
+sudo chown -R www-data:www-data /var/www/ohpizza
+sudo chmod -R 755 /var/www/ohpizza
+```
+
+### Vérifications post-installation
+
+```bash
+# Vérifier tous les services
+sudo systemctl status nginx mariadb
+pm2 status
+
+# Tester la connectivité
+curl http://localhost
+curl http://localhost/api/health
+
+# Vérifier les logs en cas de problème
+pm2 logs ohpizza-backend
+sudo tail -f /var/log/nginx/error.log
 ```
 
 ## Installation SSL (optionnel)
@@ -199,84 +304,110 @@ Pour sécuriser votre site avec HTTPS :
 # Installation de Certbot
 sudo apt install certbot python3-certbot-nginx
 
-# Obtention du certificat SSL
+# Obtenir le certificat SSL
 sudo certbot --nginx -d votre-domaine.com
 
-# Renouvellement automatique (déjà configuré)
-sudo crontab -l  # Vérifier la tâche cron
+# Renouvellement automatique
+sudo crontab -e
+# Ajouter : 0 12 * * * /usr/bin/certbot renew --quiet
 ```
 
-## Dépannage
+## Sauvegarde et restauration
 
-### Problèmes courants
-
-#### 1. Application inaccessible
+### Sauvegarde de la base de données
 ```bash
-# Vérifier les services
-sudo systemctl status nginx
-pm2 status
-sudo systemctl status mysql
+# Sauvegarde complète
+mysqldump -u ohpizza_user -p ohpizza_db > backup_$(date +%Y%m%d).sql
 
-# Vérifier les ports
-sudo netstat -tlnp | grep :80
-sudo netstat -tlnp | grep :5000
+# Sauvegarde automatique (crontab)
+0 2 * * * mysqldump -u ohpizza_user -p[PASSWORD] ohpizza_db > /var/backups/ohpizza_$(date +\%Y\%m\%d).sql
 ```
 
-#### 2. Erreur de base de données
+### Restauration
 ```bash
-# Tester la connexion
-mysql -u ohpizza_user -p ohpizza_db
+# Restaurer la base de données
+mysql -u ohpizza_user -p ohpizza_db < backup_20240101.sql
+```
+## Mise à jour de l'application
 
-# Réinitialiser si nécessaire
+### Mise à jour du code
+
+```bash
+cd /var/www/ohpizza
+git pull origin main
+
+# Backend
+cd backend
+npm install
+pm2 restart ohpizza-backend
+
+# Frontend
+cd ..
+npm install
+npm run build
+sudo systemctl reload nginx
+```
+
+### Mise à jour de la base de données
+
+```bash
 cd /var/www/ohpizza/backend
 node setup_database.js
 ```
 
-#### 3. Erreur 502 Bad Gateway
-```bash
-# Vérifier que le backend fonctionne
-pm2 logs ohpizza-backend
-curl http://localhost:5000/api/health
+## Surveillance et monitoring
 
-# Redémarrer si nécessaire
-pm2 restart ohpizza-backend
-```
-
-### Mise à jour de l'application
+### Monitoring avec PM2
 
 ```bash
-# Aller dans le dossier de l'app
-cd /var/www/ohpizza
-
-# Sauvegarder les fichiers .env
-cp .env .env.backup
-cp backend/.env backend/.env.backup
-
-# Mettre à jour le code
-git pull origin main
-
-# Réinstaller les dépendances si nécessaire
-npm install
-cd backend && npm install && cd ..
-
-# Rebuild le frontend
-npm run build
-
-# Redémarrer le backend
-pm2 restart ohpizza-backend
-
-# Recharger Nginx
-sudo systemctl reload nginx
+# Interface web PM2 (optionnel)
+pm2 install pm2-web
+pm2-web
+# Accessible sur http://votre-ip:9615
 ```
 
-## Support
+### Logs centralisés
 
-En cas de problème :
+```bash
+# Configuration de logrotate pour les logs PM2
+sudo nano /etc/logrotate.d/pm2
+# Contenu :
+/var/log/pm2/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    notifempty
+    create 0644 www-data www-data
+    postrotate
+        pm2 reloadLogs
+    endscript
+}
+```
 
-1. Vérifiez les logs mentionnés ci-dessus
-2. Consultez la documentation de chaque service
-3. Vérifiez que tous les services sont actifs
-4. Assurez-vous que les ports ne sont pas bloqués
+## Fichiers de configuration importants
+
+- **Script d'installation** : `install_ohpizza.sh`
+- **Configuration Nginx** : `/etc/nginx/sites-available/ohpizza`
+- **Configuration PM2** : `/var/www/ohpizza/backend/ecosystem.config.js`
+- **Variables backend** : `/var/www/ohpizza/backend/.env`
+- **Variables frontend** : `/var/www/ohpizza/.env`
+- **Informations d'installation** : `/var/www/ohpizza/INSTALLATION_INFO.txt`
+
+## Notes importantes
+
+- ✅ **MariaDB** remplace MySQL pour une meilleure stabilité
+- ✅ **Port 3000** pour le backend (au lieu de 5000)
+- ✅ **TypeScript** installé automatiquement
+- ✅ **Gestion automatique** des conflits de ports
+- ✅ **Table horaire** incluse dans la base de données
+- ✅ **Vérifications complètes** post-installation
+
+---
+
+**🎉 Félicitations ! Votre application Oh'Pizza est maintenant déployée avec tous les correctifs intégrés.**
+
+Pour toute question, consultez le fichier `INSTALLATION_INFO.txt` créé automatiquement ou les logs des services.
 
 ---
 

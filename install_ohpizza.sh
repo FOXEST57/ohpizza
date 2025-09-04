@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# Script d'installation automatisé pour Oh'Pizza sur VPS Hostinger
-# Auteur: Assistant IA
-# Version: 1.0
+# Script d'installation automatique pour Oh'Pizza sur VPS Hostinger
+# Ce script configure automatiquement l'environnement complet avec tous les correctifs
 
 set -e  # Arrêter le script en cas d'erreur
 
-# Couleurs pour l'affichage
+# Couleurs pour les messages
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -14,6 +13,63 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Fonction pour afficher les messages
+log_info() {
+    echo -e "${BLUE}ℹ️  $1${NC}"
+}
+
+log_success() {
+    echo -e "${GREEN}✅ $1${NC}"
+}
+
+log_warning() {
+    echo -e "${YELLOW}⚠️  $1${NC}"
+}
+
+log_error() {
+    echo -e "${RED}❌ $1${NC}"
+}
+
+# Fonction pour vérifier les prérequis
+check_prerequisites() {
+    log_info "Vérification des prérequis..."
+    
+    # Vérifier si on est root ou si sudo est disponible
+    if [[ $EUID -eq 0 ]]; then
+        SUDO_CMD=""
+    elif command -v sudo &> /dev/null; then
+        SUDO_CMD="sudo"
+    else
+        log_error "Ce script nécessite les privilèges root ou sudo"
+        exit 1
+    fi
+    
+    # Vérifier la distribution
+    if ! command -v apt &> /dev/null; then
+        log_error "Ce script est conçu pour les distributions basées sur Debian/Ubuntu"
+        exit 1
+    fi
+    
+    log_success "Prérequis vérifiés"
+}
+
+# Fonction pour arrêter les processus sur les ports utilisés
+stop_conflicting_processes() {
+    log_info "Vérification des conflits de ports..."
+    
+    # Ports à vérifier
+    PORTS=(3000 5000 5173 80 443)
+    
+    for port in "${PORTS[@]}"; do
+        if $SUDO_CMD lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1; then
+            log_warning "Port $port occupé, arrêt du processus..."
+            $SUDO_CMD lsof -ti:$port | xargs $SUDO_CMD kill -9 2>/dev/null || true
+            sleep 2
+        fi
+    done
+    
+    log_success "Conflits de ports résolus"
+}
+
 print_status() {
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -51,6 +107,15 @@ confirm() {
 generate_password() {
     openssl rand -base64 32 | tr -d "=+/" | cut -c1-25
 }
+
+echo "🍕 Début de l'installation d'Oh'Pizza..."
+echo "======================================="
+
+# Vérification des prérequis
+check_prerequisites
+
+# Arrêt des processus conflictuels
+stop_conflicting_processes
 
 echo -e "${GREEN}"
 echo "================================================"
@@ -115,6 +180,57 @@ fi
 
 echo
 print_status "Début de l'installation..."
+
+# Mise à jour du système
+log_info "Mise à jour du système..."
+$SUDO_CMD apt update && $SUDO_CMD apt upgrade -y
+
+# Installation de Node.js (version LTS)
+log_info "Installation de Node.js..."
+if ! command -v node &> /dev/null; then
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | $SUDO_CMD -E bash -
+    $SUDO_CMD apt-get install -y nodejs
+else
+    log_success "Node.js déjà installé ($(node --version))"
+fi
+
+# Installation de TypeScript globalement
+log_info "Installation de TypeScript..."
+npm install -g typescript @types/node
+
+# Installation de Git
+log_info "Installation de Git..."
+if ! command -v git &> /dev/null; then
+    $SUDO_CMD apt-get install -y git
+else
+    log_success "Git déjà installé"
+fi
+
+# Installation de Nginx
+log_info "Installation de Nginx..."
+if ! command -v nginx &> /dev/null; then
+    $SUDO_CMD apt-get install -y nginx
+else
+    log_success "Nginx déjà installé"
+fi
+
+# Installation de MariaDB Server (remplace MySQL)
+log_info "Installation de MariaDB Server..."
+if ! command -v mysql &> /dev/null; then
+    $SUDO_CMD apt-get install -y mariadb-server mariadb-client
+else
+    log_success "MariaDB déjà installé"
+fi
+
+# Sécurisation de MariaDB
+log_info "Configuration de MariaDB..."
+
+# Démarrage et activation de MariaDB
+$SUDO_CMD systemctl start mariadb
+$SUDO_CMD systemctl enable mariadb
+
+# Configuration sécurisée de MariaDB
+$SUDO_CMD mysql_secure_installation --use-default
 
 # 1. Mise à jour du système
 print_status "Mise à jour du système..."
@@ -212,7 +328,13 @@ chmod -R 755 /var/www/ohpizza
 # 10. Installation des dépendances backend
 print_status "Installation des dépendances backend..."
 cd /var/www/ohpizza/backend
-npm install
+if [ -f "package.json" ]; then
+    npm install
+    print_success "Dépendances backend installées"
+else
+    print_error "Fichier package.json introuvable dans le dossier backend"
+    exit 1
+fi
 
 # 11. Configuration du fichier .env backend
 print_status "Configuration du fichier .env backend..."
@@ -224,7 +346,7 @@ DB_PASSWORD=$OHPIZZA_PASSWORD
 DB_NAME=ohpizza_db
 
 # Configuration du serveur
-PORT=5000
+PORT=3000
 NODE_ENV=production
 
 # Clés de sécurité (générez vos propres clés en production)
@@ -257,7 +379,20 @@ fi
 # 13. Installation des dépendances frontend
 print_status "Installation des dépendances frontend..."
 cd /var/www/ohpizza
-npm install
+if [ -f "package.json" ]; then
+    # Installation des dépendances de base
+    npm install
+    
+    # Installation des dépendances React manquantes
+    print_status "Installation des dépendances React supplémentaires..."
+    npm install react react-dom react-router-dom axios clsx tailwind-merge
+    npm install --save-dev @types/react @types/react-dom @types/node
+    
+    print_success "Dépendances frontend installées"
+else
+    print_error "Fichier package.json introuvable"
+    exit 1
+fi
 
 # 14. Configuration du fichier .env frontend
 print_status "Configuration du fichier .env frontend..."
@@ -276,12 +411,29 @@ print_success "Fichier .env frontend configuré"
 
 # 15. Build du frontend
 print_status "Build du frontend..."
-npm run build
+if npm run build; then
+    print_success "Build du frontend réussi"
+    if [ -d "dist" ]; then
+        print_success "Dossier dist créé avec succès"
+    else
+        print_error "Le dossier dist n'a pas été créé"
+        exit 1
+    fi
+else
+    print_error "Erreur lors du build du frontend"
+    print_status "Tentative avec npx..."
+    if npx tsc && npm run build; then
+        print_success "Build réussi avec npx"
+    else
+        print_error "Échec du build même avec npx"
+        exit 1
+    fi
+fi
 
 print_success "Frontend buildé avec succès"
 
-# 16. Configuration de Nginx
-print_status "Configuration de Nginx..."
+# Configuration de Nginx
+log_info "Configuration de Nginx..."
 
 # Sauvegarde de la configuration par défaut
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.backup
@@ -313,7 +465,7 @@ server {
     
     # Proxy pour l'API backend
     location /api {
-        proxy_pass http://localhost:5000;
+        proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -322,6 +474,11 @@ server {
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
         proxy_cache_bypass \$http_upgrade;
+        
+        # Timeout settings
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
     }
     
     # Gestion des fichiers statiques avec cache
@@ -338,21 +495,22 @@ server {
 EOF
 
 # Activation du site
+log_info "Activation du site Nginx..."
 ln -sf /etc/nginx/sites-available/ohpizza /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 
 # Test de la configuration Nginx
-nginx -t
-if [[ $? -eq 0 ]]; then
+if nginx -t; then
+    log_success "Configuration Nginx valide"
     systemctl reload nginx
-    print_success "Configuration Nginx appliquée avec succès"
+    log_success "Nginx redémarré et activé"
 else
-    print_error "Erreur dans la configuration Nginx"
+    log_error "Erreur dans la configuration Nginx"
     exit 1
 fi
 
-# 17. Configuration de PM2 pour le backend
-print_status "Configuration de PM2..."
+# Configuration de PM2 pour le backend
+log_info "Configuration de PM2..."
 cd /var/www/ohpizza/backend
 
 # Création du fichier de configuration PM2
@@ -366,7 +524,7 @@ module.exports = {
     exec_mode: 'fork',
     env: {
       NODE_ENV: 'production',
-      PORT: 5000
+      PORT: 3000
     },
     error_file: '/var/log/pm2/ohpizza-error.log',
     out_file: '/var/log/pm2/ohpizza-out.log',
@@ -384,14 +542,22 @@ EOF
 mkdir -p /var/log/pm2
 chown -R www-data:www-data /var/log/pm2
 
+# Arrêt des processus PM2 existants
+pm2 delete ohpizza-backend 2>/dev/null || true
+
 # Démarrage de l'application avec PM2
-pm2 start ecosystem.config.js
-pm2 save
+if pm2 start ecosystem.config.js; then
+    log_success "Backend démarré avec PM2"
+    pm2 startup
+    pm2 save
+    log_success "PM2 configuré pour le démarrage automatique"
+else
+    log_error "Erreur lors du démarrage du backend avec PM2"
+    exit 1
+fi
 
-print_success "Application démarrée avec PM2"
-
-# 18. Configuration du firewall (UFW)
-print_status "Configuration du firewall..."
+# Configuration du firewall (UFW)
+log_info "Configuration du firewall..."
 if command_exists ufw; then
     ufw --force enable
     ufw allow ssh
@@ -399,34 +565,58 @@ if command_exists ufw; then
     ufw allow 22
     ufw allow 80
     ufw allow 443
-    print_success "Firewall configuré"
+    log_success "Firewall configuré"
 else
-    print_warning "UFW non installé, installation..."
+    log_warning "UFW non installé, installation..."
     apt install -y ufw
     ufw --force enable
     ufw allow ssh
     ufw allow 'Nginx Full'
-    print_success "Firewall installé et configuré"
+    log_success "Firewall installé et configuré"
 fi
 
-# 19. Vérifications finales
-print_status "Vérifications finales..."
+# Vérifications finales
+log_info "Vérifications finales..."
 
-# Vérification des services
-services=("nginx" "mysql" "pm2")
-for service in "${services[@]}"; do
-    if systemctl is-active --quiet "$service" 2>/dev/null || pm2 list | grep -q "ohpizza-backend" 2>/dev/null; then
-        print_success "Service $service: ✓ Actif"
+# Fonction de vérification des services
+check_service() {
+    local service=$1
+    local name=$2
+    
+    if systemctl is-active --quiet $service; then
+        log_success "$name est actif"
     else
-        print_warning "Service $service: ✗ Inactif"
+        log_error "$name n'est pas actif"
+        return 1
     fi
-done
+}
+
+# Vérifications des services
+check_service nginx "Nginx"
+check_service mariadb "MariaDB"
+
+# Vérification de PM2
+log_info "Vérification de PM2..."
+if pm2 status | grep -q "ohpizza-backend"; then
+    log_success "Backend PM2 actif"
+else
+    log_error "Backend PM2 non actif"
+fi
 
 # Test de connectivité à la base de données
-if mysql -u ohpizza_user -p"$OHPIZZA_PASSWORD" -e "USE ohpizza_db; SHOW TABLES;" >/dev/null 2>&1; then
-    print_success "Connexion à la base de données: ✓ OK"
+log_info "Test de connexion à la base de données..."
+if mysql -u ohpizza_user -p"$OHPIZZA_PASSWORD" -e "USE ohpizza_db; SHOW TABLES;" &>/dev/null; then
+    log_success "Connexion à la base de données réussie"
 else
-    print_warning "Connexion à la base de données: ✗ Problème"
+    log_error "Erreur de connexion à la base de données"
+fi
+
+# Vérification des fichiers
+log_info "Vérification des fichiers..."
+if [ -d "/var/www/ohpizza/dist" ] && [ -f "/var/www/ohpizza/dist/index.html" ]; then
+    log_success "Fichiers frontend présents"
+else
+    log_error "Fichiers frontend manquants"
 fi
 
 # 20. Instructions finales
