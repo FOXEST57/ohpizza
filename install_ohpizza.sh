@@ -75,14 +75,14 @@ if [[ -z "$GITHUB_URL" ]]; then
     exit 1
 fi
 
-# Mot de passe MySQL root
+# Mot de passe MariaDB root
 while true; do
-    read -s -p "Mot de passe pour l'utilisateur root MySQL: " MYSQL_ROOT_PASSWORD
+    read -s -p "Mot de passe pour l'utilisateur root MariaDB: " MYSQL_ROOT_PASSWORD
     echo
     if [[ -n "$MYSQL_ROOT_PASSWORD" ]]; then
         break
     fi
-    print_warning "Le mot de passe root MySQL ne peut pas être vide"
+    print_warning "Le mot de passe root MariaDB ne peut pas être vide"
 done
 
 # Mot de passe pour ohpizza_user
@@ -154,24 +154,24 @@ else
     print_success "Nginx est déjà installé"
 fi
 
-# 6. Installation de MySQL Server
-print_status "Installation de MySQL Server..."
+# 6. Installation de MariaDB Server
+print_status "Installation de MariaDB Server..."
 if ! command_exists mysql; then
     # Pré-configuration pour éviter les prompts interactifs
-    debconf-set-selections <<< "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD"
-    debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD"
+    debconf-set-selections <<< "mariadb-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD"
+    debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD"
     
-    apt install -y mysql-server
-    systemctl enable mysql
-    systemctl start mysql
+    apt install -y mariadb-server
+    systemctl enable mariadb
+    systemctl start mariadb
 else
-    print_success "MySQL est déjà installé"
+    print_success "MariaDB est déjà installé"
 fi
 
-# 7. Configuration de MySQL
-print_status "Configuration de la base de données MySQL..."
+# 7. Configuration de MariaDB
+print_status "Configuration de la base de données MariaDB..."
 
-# Création du fichier de configuration MySQL temporaire
+# Création du fichier de configuration MariaDB temporaire
 cat > /tmp/mysql_setup.sql << EOF
 CREATE DATABASE IF NOT EXISTS ohpizza_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS 'ohpizza_user'@'localhost' IDENTIFIED BY '$OHPIZZA_PASSWORD';
@@ -179,7 +179,7 @@ GRANT ALL PRIVILEGES ON ohpizza_db.* TO 'ohpizza_user'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
-# Exécution des commandes MySQL
+# Exécution des commandes MariaDB
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" < /tmp/mysql_setup.sql
 rm /tmp/mysql_setup.sql
 
