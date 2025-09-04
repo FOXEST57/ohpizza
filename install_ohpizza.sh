@@ -181,56 +181,7 @@ fi
 echo
 print_status "Début de l'installation..."
 
-# Mise à jour du système
-log_info "Mise à jour du système..."
-$SUDO_CMD apt update && $SUDO_CMD apt upgrade -y
 
-# Installation de Node.js (version LTS)
-log_info "Installation de Node.js..."
-if ! command -v node &> /dev/null; then
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | $SUDO_CMD -E bash -
-    $SUDO_CMD apt-get install -y nodejs
-else
-    log_success "Node.js déjà installé ($(node --version))"
-fi
-
-# Installation de TypeScript globalement
-log_info "Installation de TypeScript..."
-npm install -g typescript @types/node
-
-# Installation de Git
-log_info "Installation de Git..."
-if ! command -v git &> /dev/null; then
-    $SUDO_CMD apt-get install -y git
-else
-    log_success "Git déjà installé"
-fi
-
-# Installation de Nginx
-log_info "Installation de Nginx..."
-if ! command -v nginx &> /dev/null; then
-    $SUDO_CMD apt-get install -y nginx
-else
-    log_success "Nginx déjà installé"
-fi
-
-# Installation de MariaDB Server (remplace MySQL)
-log_info "Installation de MariaDB Server..."
-if ! command -v mysql &> /dev/null; then
-    $SUDO_CMD apt-get install -y mariadb-server mariadb-client
-else
-    log_success "MariaDB déjà installé"
-fi
-
-# Sécurisation de MariaDB
-log_info "Configuration de MariaDB..."
-
-# Démarrage et activation de MariaDB
-$SUDO_CMD systemctl start mariadb
-$SUDO_CMD systemctl enable mariadb
-
-# Configuration sécurisée de MariaDB
-$SUDO_CMD mysql_secure_installation --use-default
 
 # 1. Mise à jour du système
 print_status "Mise à jour du système..."
